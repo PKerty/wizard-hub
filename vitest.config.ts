@@ -15,13 +15,14 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: false,
+    setupFiles: ["./tests/setup.ts"],
     include: ["**/*.test.ts", "**/*.test.tsx"],
     exclude: ["node_modules", ".next", "e2e"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      include: ["modules/**/*.ts", "lib/**/*.ts"],
-      exclude: ["**/*.test.ts"],
+      include: ["modules/**/*.ts", "lib/**/*.ts", "components/**/*.tsx"],
+      exclude: ["**/*.test.ts", "**/*.test.tsx"],
     },
   },
 });

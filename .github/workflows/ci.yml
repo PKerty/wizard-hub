@@ -41,4 +41,4 @@ jobs:
         env:
           NEXT_PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY || 'test-key' }}
           NEXT_PUBLIC_AMPLITUDE_ENABLED: "false"
-          WIZARD_WORLD_API_BASE_URL: https://wizard-world-api.com/api
+          WIZARD_WORLD_API_BASE_URL: https://wizard-world-api.herokuapp.com

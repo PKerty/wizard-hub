@@ -13,7 +13,5 @@ export interface House {
   ghost: string;
   commonRoom: string;
   traitNames: string[];
-  memberCount: number;
   headNames: string[];
-  colorValues: string[];
 }
