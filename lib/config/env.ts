@@ -20,6 +20,8 @@ export const env = {
   amplitude: {
     apiKey: required("NEXT_PUBLIC_AMPLITUDE_API_KEY"),
     enabled: process.env.NEXT_PUBLIC_AMPLITUDE_ENABLED !== "false",
+    /** Session Replay is a paid Amplitude feature — opt-in only (ADR-0017). */
+    sessionReplayEnabled: process.env.NEXT_PUBLIC_AMPLITUDE_SESSION_REPLAY === "true",
   },
   wizardWorld: {
     baseUrl: process.env.WIZARD_WORLD_API_BASE_URL ?? "https://wizard-world-api.com/api",

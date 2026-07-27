@@ -1,4 +1,4 @@
-import * as amplitude from "@amplitude/analytics-browser";
+import * as amplitude from "@amplitude/unified";
 import type { EventCatalog } from "./events";
 import { env } from "@/lib/config/env";
 
@@ -12,23 +12,35 @@ export type UserPropertyValue = string | number | boolean;
 export type UserProperties = Record<string, UserPropertyValue>;
 
 /**
- * Initialize the Amplitude SDK.
- * Safe to call multiple times — subsequent calls are no-ops (advanced-init-once pattern).
+ * Initialize Amplitude (analytics + optionally session replay).
+ * Idempotent: safe to call multiple times (advanced-init-once pattern).
  * Respects `NEXT_PUBLIC_AMPLITUDE_ENABLED=false` (CI/tests/local without a key).
+ *
+ * Uses `initAll` from @amplitude/unified (ADR-0017) which initializes analytics
+ * and session replay in one call. Session replay is opt-in via env var because
+ * it's a paid feature and we don't want it recording by default.
  */
 export function initAnalytics(): void {
   if (initialized) return;
   if (!env.amplitude.enabled) return;
   if (!env.amplitude.apiKey) return;
 
-  amplitude.init(env.amplitude.apiKey, {
-    defaultTracking: {
-      pageViews: true,
-      sessions: true,
-      formInteractions: false,
-      fileDownloads: false,
+  console.info("[analytics] initializing amplitude unified SDK");
+
+  void amplitude.initAll(env.amplitude.apiKey, {
+    analytics: {
+      defaultTracking: {
+        pageViews: true,
+        sessions: true,
+        formInteractions: false,
+        fileDownloads: false,
+      },
     },
+    ...(env.amplitude.sessionReplayEnabled
+      ? { sessionReplay: { sampleRate: 1 } }
+      : {}),
   });
+
   initialized = true;
 }
 
@@ -39,7 +51,7 @@ export function setUserId(userId: string | null): void {
 
 /**
  * Logs out: clears userId and regenerates the device id in one call.
- * Browser SDK 2.x exposes this as `reset()` (not separate `regenerateDeviceId`).
+ * Unified SDK exposes this as `reset()` (not separate `regenerateDeviceId`).
  */
 export function resetIdentity(): void {
   if (!initialized) return;
