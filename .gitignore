@@ -46,3 +46,6 @@ Thumbs.db
 
 # adr / docs build artifacts
 docs/_build
+
+# challenge brief — private, not for repo
+docs/Challenge*.pdf

@@ -6,7 +6,7 @@
 - **Relacionado:** REPO-001
 
 ## Contexto
-Repo en GitHub, deploy automático por push a `main` (ver ADR-0004 Vercel). Necesitamos convención de branches, commits, y reglas de PR que sostengan el principio "minimal primero, luego ampliar" + revisiones revisables.
+Repo en GitHub, deploy automático por push a `master` (ver ADR-0004 Vercel). Necesitamos convención de branches, commits, y reglas de PR que sostengan el principio "minimal primero, luego ampliar" + revisiones revisables.
 
 ## Decisión
 
@@ -55,7 +55,7 @@ Formato: `<type>/<NNN>-<slug>`
 
 **Reglas hard:**
 - **≤300 líneas de diff** (excluyendo `package-lock.json`, `pnpm-lock.yaml`, snapshots generados y archivos de tests que no sean unitarios).
-- **Self-contained:** el branch debe dejar `main` en estado deployable y verde (build + lint + typecheck + tests pasan).
+- **Self-contained:** el branch debe dejar `master` en estado deployable y verde (build + lint + typecheck + tests pasan).
 - **1 sola feature lógica por PR.** Si necesitás tocar 3 áreas no relacionadas, son 3 PRs.
 - **Título + descripción** siguiendo template (`.github/pull_request_template.md`).
 - **Descripción debe linkear el ADR relevante** si la feature es "significativa" (regla del AGENTS.md §2).

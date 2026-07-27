@@ -75,7 +75,7 @@ Co-locación: `<file>.test.ts` al lado del `<file>.ts`. Más fácil de encontrar
 
 ## Consecuencias
 - **Positivas:**
-  - 4 gates automáticos antes de cada merge → menos bugs en `main`.
+  - 4 gates automáticos antes de cada merge → menos bugs en `master`.
   - TDD fuerza interfaces pequeñas y diseño testeable → alinea con ADR-0009 (hexagonal).
   - Vitest da feedback loop de ms → no rompe el ritmo de desarrollo.
 - **Negativas / Riesgos:**
