@@ -81,6 +81,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0014 | Stack CSS — Tailwind CSS | Aceptado |
 | 0015 | Icon set — custom SVG heráldico/esotérico | Aceptado |
 | 0016 | Ilustración — line-art tipo "Marauder's Map" | Aceptado |
+| 0017 | Migración a `@amplitude/unified` (reemplaza parte de ADR-0006) | Aceptado |
 
 ---
 
@@ -110,7 +111,7 @@ Resumen ejecutivo. Detalle en los ADRs.
 | Framework | Next.js App Router | 0002 |
 | Hosting | Vercel Hobby | 0004 |
 | Fetching | SSG home + ISR catálogo (`revalidate: 86400`) | 0005 |
-| Amplitude | wrapper tipado en `lib/analytics/` | 0006 |
+| Amplitude | wrapper tipado en `lib/analytics/` | 0006, 0017 |
 | Eventos | Title Case + camelCase props; catálogo finito v1 | 0007 |
 | Identidad | `setUserId(email)` al unirse; sin auth real | 0008 |
 | Estructura | `app/` + `modules/<context>/{domain,application,infrastructure}` + `lib/` | 0009 |

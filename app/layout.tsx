@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import Script from "next/script";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
+import { Providers } from "./providers";
+import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,8 +19,17 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className="font-body antialiased">{children}</body>
+    <html lang="es" data-theme="dark" suppressHydrationWarning>
+      <body className="font-body antialiased">
+        {/* Sets initial data-theme before hydration to prevent FOUC (ADR-0013 §6). */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
+        <Providers>
+          {children}
+          <ThemeToggle />
+        </Providers>
+      </body>
     </html>
   );
 }
