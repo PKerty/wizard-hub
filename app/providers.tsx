@@ -12,8 +12,12 @@ import { init as initAnalytics } from "@/lib/analytics";
  * Server Components cannot call `useEffect`, so this lives in a Client Component
  * mounted once at the root layout.
  */
+
+let didInit = false;
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    if (didInit) return;
+    didInit = true;
     initAnalytics();
   }, []);
 

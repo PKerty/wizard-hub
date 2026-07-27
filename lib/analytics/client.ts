@@ -25,8 +25,6 @@ export function initAnalytics(): void {
   if (!env.amplitude.enabled) return;
   if (!env.amplitude.apiKey) return;
 
-  console.info("[analytics] initializing amplitude unified SDK");
-
   void amplitude.initAll(env.amplitude.apiKey, {
     analytics: {
       defaultTracking: {
