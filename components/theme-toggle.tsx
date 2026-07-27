@@ -1,49 +1,51 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import {
   getNextTheme,
   persistTheme,
-  resolveInitialTheme,
   type Theme,
 } from "@/lib/theme";
 import { trackThemeToggled } from "@/lib/analytics";
 
 /**
- * Theme toggle button (ADR-0013 §6 + ADR-0007 event `Theme Toggled`).
+ * Subscribe to `data-theme` changes on <html>. Re-renders the component when
+ * the attribute changes (e.g., after toggle, or via devtools).
  *
- * Initial theme is already applied to <html data-theme="..."> by the inline
- * script in <head> (see layout.tsx). This component only syncs React state
- * with that attribute and toggles on click.
+ * Using useSyncExternalStore (React 18+) is the idiomatic way to read external
+ * (non-React) state. Avoids setState-in-effect anti-pattern AND keeps SSR safe
+ * via getServerSnapshot.
+ */
+function subscribe(callback: () => void): () => void {
+  const observer = new MutationObserver(callback);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  return () => observer.disconnect();
+}
+
+function getThemeSnapshot(): Theme {
+  return (document.documentElement.dataset.theme as Theme | undefined) ?? "dark";
+}
+
+function getThemeServerSnapshot(): Theme {
+  // Always "dark" on the server, matching <html data-theme="dark"> in layout.
+  return "dark";
+}
+
+/**
+ * Theme toggle button (ADR-0013 §6 + ADR-0007 event `Theme Toggled`).
  */
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof document === "undefined") return "dark";
-    return (document.documentElement.dataset.theme as Theme) ?? "dark";
-  });
-
-  // Keep state in sync if the attribute is changed elsewhere.
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const current = document.documentElement.dataset.theme as Theme | undefined;
-      if (current && current !== theme) {
-        setTheme(current);
-      }
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-    return () => observer.disconnect();
-  }, [theme]);
+  const theme = useSyncExternalStore(subscribe, getThemeSnapshot, getThemeServerSnapshot);
 
   const handleToggle = useCallback(() => {
-    const next = getNextTheme(resolveInitialTheme());
+    const next = getNextTheme(theme);
     document.documentElement.dataset.theme = next;
     persistTheme(next);
-    setTheme(next);
     trackThemeToggled({ newTheme: next });
-  }, []);
+  }, [theme]);
 
   const label = theme === "dark" ? "Switch to light" : "Switch to dark";
 
