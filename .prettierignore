@@ -1,0 +1,8 @@
+.next
+node_modules
+coverage
+out
+pnpm-lock.yaml
+package-lock.json
+docs/adr
+docs/design-system.md
