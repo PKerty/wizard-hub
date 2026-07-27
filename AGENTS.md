@@ -10,7 +10,7 @@ Web application para el fanclub de Harry Potter, cuyo objetivo es **guiar a nuev
 
 | Fase | Objetivo resumido |
 |------|-------------------|
-| **Implementación** | Web app que consume la [Wizard World API](https://wizard-world-api.com/) (`/houses`, `/houses/:id`) + instrumentación de **Amplitude** (page views + ≥5 eventos de interacción). Entregables: HLD, LLD, repo GitHub, hosting (deseable). |
+| **Implementación** | Web app que consume la [Wizard World API](https://wizard-world-api.herokuapp.com/) (`/Houses`, `/Houses/:id`) + instrumentación de **Amplitude** (page views + ≥5 eventos de interacción). Entregables: HLD, LLD, repo GitHub, hosting (deseable). |
 | **Presentación** | Tech overview, intro a Amplitude (events/users/properties, ciclo de vida anónimo→conocido) y dashboard con dos métricas: *Most viewed House (Unique Users)* y *All Houses Viewed by Platform (Event Totals)*. |
 
 Documento original del challenge: `docs/Challenge - Solutions Architect (2) (2).pdf`.
@@ -142,6 +142,6 @@ Resumen ejecutivo. Detalle en los ADRs.
 
 ## 7. Recursos externos
 
-- **API:** Wizard World API — `https://wizard-world-api.com/` (endpoints: `/houses`, `/houses/{id}` con subrecursos como miembros, colores, etc.).
+- **API:** Wizard World API — `https://wizard-world-api.herokuapp.com/` (endpoints: `/Houses`, `/Houses/{id}` con subrecursos `heads` y `traits`). Nota: el dominio `wizard-world-api.com` está muerto; el host real es Heroku.
 - **Analytics:** Amplitude Docs y Amplitude Help Center (referenciados por el challenge).
 - Diagramas: ver ADR-0010 (Mermaid en `docs/diagrams/`).

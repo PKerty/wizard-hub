@@ -2,7 +2,7 @@
 
 > Web application for the Harry Potter fanclub — guides new members into the Hogwarts world.
 
-Built as part of the **Solutions Architect Challenge**: consumes the [Wizard World API](https://wizard-world-api.com/) (`/houses`, `/houses/:id`) and instruments [Amplitude](https://amplitude.com/) for product analytics.
+Built as part of the **Solutions Architect Challenge**: consumes the [Wizard World API](https://wizard-world-api.herokuapp.com/) (`/Houses`, `/Houses/:id`) and instruments [Amplitude](https://amplitude.com/) for product analytics.
 
 ---
 

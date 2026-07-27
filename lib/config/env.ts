@@ -21,7 +21,7 @@ export const env = {
     sessionReplayEnabled: process.env.NEXT_PUBLIC_AMPLITUDE_SESSION_REPLAY === "true",
   },
   wizardWorld: {
-    baseUrl: process.env.WIZARD_WORLD_API_BASE_URL ?? "https://wizard-world-api.com/api",
+    baseUrl: process.env.WIZARD_WORLD_API_BASE_URL ?? "https://wizard-world-api.herokuapp.com",
   },
   nodeEnv: process.env.NODE_ENV ?? "development",
 } as const;

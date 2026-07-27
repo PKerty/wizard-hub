@@ -30,9 +30,7 @@ function makeHouse(overrides: Partial<House> = {}): House {
     ghost: "Nearly Headless Nick",
     commonRoom: "Gryffindor Common Room",
     traitNames: ["Bravery", "Nerve"],
-    memberCount: 0,
     headNames: [],
-    colorValues: [],
     ...overrides,
   };
 }

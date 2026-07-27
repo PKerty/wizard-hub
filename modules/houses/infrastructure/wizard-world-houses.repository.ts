@@ -18,9 +18,7 @@ function mapResponseToEntity(r: HouseResponse): House {
     ghost: r.ghost,
     commonRoom: r.commonRoom,
     traitNames: r.traits.map((t) => t.name),
-    memberCount: r.members.length,
     headNames: r.heads.map((h) => `${h.firstName} ${h.lastName}`),
-    colorValues: r.colors.map((c) => c.color),
   };
 }
 
