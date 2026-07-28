@@ -72,14 +72,17 @@ export function Nav() {
         </Link>
 
         <div className="flex items-center gap-8">
-          <ul className="flex items-center gap-8">
+          <ul className="flex items-center gap-4 sm:gap-8">
             {LINKS.map((link) => {
               const active = isActive(pathname, link.href);
               const handleClick = link.tracksAsExploreCta
                 ? () => trackExploreCtaClicked({ location: "nav" })
                 : undefined;
+              // ADR-0020: hide explicit "Home" link on mobile — the brand
+              // already links to "/".
+              const hiddenOnMobile = link.href === "/";
               return (
-                <li key={link.href}>
+                <li key={link.href} className={hiddenOnMobile ? "hidden sm:list-item" : undefined}>
                   <Link
                     href={link.href}
                     onClick={handleClick}

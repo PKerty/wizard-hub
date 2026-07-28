@@ -56,9 +56,11 @@ export default async function HouseDetailPage({ params, searchParams }: PageProp
           <span className="shimmer shimmer-text">{house.name}</span>
         </h1>
 
-        <p className="mt-6 font-mono text-mono-data text-moonlight">
-          Founder · {house.founder} · Animal · {house.animal} · Ghost · {house.ghost}
-        </p>
+        <ul className="mt-6 flex flex-col gap-1 font-mono text-mono-data text-moonlight sm:flex-row sm:gap-3">
+          <li>Founder · {house.founder}</li>
+          <li>Animal · {house.animal}</li>
+          <li>Ghost · {house.ghost}</li>
+        </ul>
 
         <p className="mt-8 max-w-2xl font-body text-body-lg text-moonlight">
           Colours: {house.houseColours}. Common room: {house.commonRoom}.
