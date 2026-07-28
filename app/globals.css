@@ -41,6 +41,10 @@
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
   /* Typography scale (size + line-height pairs) */
+  /* Note: for clamp()-based sizes, Tailwind v4 needs the explicit --line-height suffix
+     instead of the "<size> <line-height>" shorthand (comma inside clamp confuses the parser). */
+  --text-mega: clamp(3rem, 8vw, 6rem);
+  --text-mega--line-height: 0.95;
   --text-hero: 4rem 1.05;
   --text-display: 2.75rem 1.1;
   --text-h2: 2rem 1.2;
