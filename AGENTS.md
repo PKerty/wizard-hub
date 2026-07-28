@@ -82,6 +82,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0015 | Icon set — custom SVG heráldico/esotérico | Aceptado |
 | 0016 | Ilustración — line-art tipo "Marauder's Map" | Aceptado |
 | 0017 | Migración a `@amplitude/unified` (reemplaza parte de ADR-0006) | Aceptado |
+| 0018 | Extender taxonomy con `Fanclub Joined` (extiende ADR-0007 a v1.1) | Aceptado |
 
 ---
 
