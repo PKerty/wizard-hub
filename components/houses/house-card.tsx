@@ -9,12 +9,15 @@ export interface HouseCardProps {
   /**
    * Where the card is being rendered. Tracked with the click event so the
    * dashboard can distinguish list-page clicks from home-page clicks.
+   *
+   * Also forwarded to /houses/[id] as ?source=… so the House Viewed event
+   * knows the origin ('houses_list' → 'list', 'home' → 'home').
    */
   source: "home" | "houses_list";
 }
 
 /**
- * House card per design-system.md §3.5 (House Card anatomy).
+ * House card per design-system.md §3.4 (House Card anatomy).
  * Shield placeholder will be replaced by custom SVG heraldry (ADR-0015).
  */
 export function HouseCard({ house, source }: HouseCardProps) {
@@ -26,11 +29,12 @@ export function HouseCard({ house, source }: HouseCardProps) {
     });
   };
 
+  const sourceForUrl = source === "houses_list" ? "list" : source;
   const primaryTrait = house.traitNames[0] ?? "";
 
   return (
     <Link
-      href={`/houses/${house.id}`}
+      href={`/houses/${house.id}?source=${sourceForUrl}`}
       onClick={handleClick}
       className="group relative block rounded-card border border-moonlight/20 bg-bg-mist/40 p-6 transition-all duration-base ease-arcane hover:border-torchlight hover:shadow-hover"
     >

@@ -1,21 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { trackExploreCtaClicked } from "@/lib/analytics";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavLinkDef {
-  href: string;
+  href: Route;
   label: string;
   /** If true, clicking fires `Explore CTA Clicked` with location 'nav'. */
   tracksAsExploreCta: boolean;
 }
 
-const LINKS: readonly NavLinkDef[] = [
+const LINKS = [
   { href: "/", label: "Home", tracksAsExploreCta: false },
   { href: "/houses", label: "Houses", tracksAsExploreCta: true },
-] as const;
+] as const satisfies readonly NavLinkDef[];
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";

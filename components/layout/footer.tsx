@@ -1,18 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { trackExploreCtaClicked } from "@/lib/analytics";
 
 interface FooterLinkDef {
-  href: string;
+  href: Route;
   label: string;
   tracksAsExploreCta: boolean;
 }
 
-const LINKS: readonly FooterLinkDef[] = [
+const LINKS = [
   { href: "/", label: "Home", tracksAsExploreCta: false },
   { href: "/houses", label: "Houses", tracksAsExploreCta: true },
-] as const;
+] as const satisfies readonly FooterLinkDef[];
 
 /**
  * Site footer. Renders on every page via the root layout.

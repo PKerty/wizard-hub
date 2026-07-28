@@ -50,13 +50,22 @@ describe("HouseCard", () => {
     expect(screen.getByText(/Fire/)).toBeInTheDocument();
   });
 
-  it("links to /houses/[id]", () => {
+  it("links to /houses/[id]?source=list when source is 'houses_list'", () => {
     const house = makeHouse({ id: "ravenclaw" });
 
     render(<HouseCard house={house} source="houses_list" />);
 
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "/houses/ravenclaw");
+    expect(link).toHaveAttribute("href", "/houses/ravenclaw?source=list");
+  });
+
+  it("forwards source as ?source=home when source is 'home'", () => {
+    const house = makeHouse({ id: "gryffindor" });
+
+    render(<HouseCard house={house} source="home" />);
+
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", "/houses/gryffindor?source=home");
   });
 
   it("fires trackHouseCardClicked with house data and source on click", async () => {
