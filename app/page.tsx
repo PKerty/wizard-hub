@@ -1,3 +1,5 @@
+import { CtaLink } from "@/components/ui/cta-link";
+
 export default function HomePage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-16 md:py-24">
@@ -14,7 +16,13 @@ export default function HomePage() {
         learn their founders, and join the order.
       </p>
 
-      <div className="mt-12 border-t border-moonlight/20 pt-6">
+      <div className="mt-12">
+        <CtaLink href="/houses" location="hero">
+          Explore the Houses
+        </CtaLink>
+      </div>
+
+      <div className="mt-16 border-t border-moonlight/20 pt-6">
         <p className="font-mono text-mono-data text-whisper">
           Folio I · / · v0.1.0 · scaffold
         </p>

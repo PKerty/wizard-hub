@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { Providers } from "./providers";
+import { Nav } from "@/components/layout/nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           {THEME_INIT_SCRIPT}
         </Script>
         <Providers>
+          <Nav />
           {children}
           <ThemeToggle />
         </Providers>
