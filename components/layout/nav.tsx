@@ -85,9 +85,10 @@ export function Nav() {
                     onClick={handleClick}
                     aria-current={active ? "page" : undefined}
                     className={
-                      active
+                      "inline-flex min-h-11 items-center " +
+                      (active
                         ? "font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight"
-                        : "font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
+                        : "font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel")
                     }
                   >
                     {link.label}
@@ -100,14 +101,14 @@ export function Nav() {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-torchlight"
+                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-torchlight"
                 >
                   Sign Out
                 </button>
               ) : (
                 <Link
                   href="/join"
-                  className="font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
+                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
                 >
                   Join
                 </Link>

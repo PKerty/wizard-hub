@@ -44,7 +44,7 @@ export function Footer() {
                 <Link
                   href={link.href}
                   onClick={handleClick}
-                  className="font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
+                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
                 >
                   {link.label}
                 </Link>
