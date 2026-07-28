@@ -52,7 +52,7 @@ export default async function HouseDetailPage({ params, searchParams }: PageProp
         </p>
 
         <h1 className="mt-6 font-display text-mega font-semibold leading-[0.95] text-steel">
-          {house.name}
+          <span className="shimmer shimmer-text">{house.name}</span>
         </h1>
 
         <p className="mt-6 font-mono text-mono-data text-moonlight">
