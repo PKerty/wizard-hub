@@ -44,6 +44,10 @@ export function trackThemeToggled(props: EventCatalog["Theme Toggled"]): void {
   trackRawEvent("Theme Toggled", props);
 }
 
+export function trackFanclubJoined(props: EventCatalog["Fanclub Joined"]): void {
+  trackRawEvent("Fanclub Joined", props);
+}
+
 /* ==================== Identity (ADR-0008) ==================== */
 
 export interface FanclubMember {

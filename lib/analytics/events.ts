@@ -36,6 +36,14 @@ export interface ThemeToggledProperties {
   newTheme: "dark" | "light";
 }
 
+/* ==================== v1.1 events (ADR-0018) ==================== */
+
+export interface FanclubJoinedProperties {
+  favoriteHouse: "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff";
+  /** Longitud del wizardName elegido — NO el nombre en sí, para minimizar PII. */
+  wizardNameLength: number;
+}
+
 /* ==================== Event name + property map ==================== */
 
 export interface EventCatalog {
@@ -45,6 +53,7 @@ export interface EventCatalog {
   "Back To Houses Clicked": BackToHousesClickedProperties;
   "External Link Clicked": ExternalLinkClickedProperties;
   "Theme Toggled": ThemeToggledProperties;
+  "Fanclub Joined": FanclubJoinedProperties;
 }
 
 export type EventName = keyof EventCatalog;
