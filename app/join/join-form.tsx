@@ -6,10 +6,10 @@ import { identifyFanclubMember, trackFanclubJoined } from "@/lib/analytics";
 import { saveWizardName } from "@/lib/user";
 
 const HOUSE_OPTIONS = [
-  { value: "gryffindor", label: "Gryffindor" },
-  { value: "slytherin", label: "Slytherin" },
-  { value: "ravenclaw", label: "Ravenclaw" },
-  { value: "hufflepuff", label: "Hufflepuff" },
+  { value: "gryffindor", label: "Gryffindor", color: "var(--color-house-gryffindor)" },
+  { value: "slytherin", label: "Slytherin", color: "var(--color-house-slytherin)" },
+  { value: "ravenclaw", label: "Ravenclaw", color: "var(--color-house-ravenclaw)" },
+  { value: "hufflepuff", label: "Hufflepuff", color: "var(--color-house-hufflepuff)" },
 ] as const;
 
 type FavoriteHouse = (typeof HOUSE_OPTIONS)[number]["value"];
@@ -35,7 +35,9 @@ const INITIAL_STATE: FormState = {
  * 3. Saves wizardName to localStorage so the UI can greet personally.
  * 4. Redirects to / where the hero swaps "wanderer" → wizardName.
  *
- * No backend — purely client-side identity assignment.
+ * House picker is a radio group styled as shield cards (replaces a flat <select>
+ * — more engaging and on-brand with the heraldry motif). Each card wraps a
+ * visually-hidden radio input so keyboard + screen-reader UX stays native.
  */
 export function JoinForm() {
   const router = useRouter();
@@ -105,30 +107,80 @@ export function JoinForm() {
         />
       </div>
 
-      <div>
-        <label
-          htmlFor="favoriteHouse"
-          className="block font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight"
-        >
+      <fieldset className="m-0 border-0 p-0">
+        <legend className="block font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight">
           Favorite House
-        </label>
-        <select
-          id="favoriteHouse"
-          required
-          value={form.favoriteHouse}
-          onChange={(e) => update("favoriteHouse", e.target.value as FavoriteHouse | "")}
-          className="mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none transition-colors duration-base ease-arcane focus:border-torchlight"
-        >
-          <option value="" disabled className="bg-bg-void text-whisper">
-            Choose your house…
-          </option>
-          {HOUSE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-bg-void text-steel">
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </div>
+        </legend>
+
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {HOUSE_OPTIONS.map((opt) => {
+            const isSelected = form.favoriteHouse === opt.value;
+            const inputId = `favoriteHouse-${opt.value}`;
+            return (
+              <label
+                key={opt.value}
+                htmlFor={inputId}
+                className={
+                  "group relative flex cursor-pointer flex-col items-center gap-3 rounded-card border p-4 transition-all duration-base ease-arcane " +
+                  (isSelected
+                    ? "border-torchlight bg-bg-mist/60 shadow-[0_0_24px_rgba(212,162,75,0.2)]"
+                    : "border-moonlight/30 bg-bg-mist/30 hover:border-moonlight hover:bg-bg-mist/50")
+                }
+              >
+                <input
+                  id={inputId}
+                  type="radio"
+                  name="favoriteHouse"
+                  value={opt.value}
+                  checked={isSelected}
+                  onChange={() => update("favoriteHouse", opt.value)}
+                  required
+                  className="absolute size-0 opacity-0"
+                />
+
+                {/* Shield placeholder — replaced by custom SVG heraldry in ADR-0015. */}
+                <svg
+                  viewBox="0 0 48 48"
+                  width="48"
+                  height="48"
+                  fill="none"
+                  aria-hidden="true"
+                  style={{ color: opt.color }}
+                >
+                  <path
+                    d="M24 4L8 10v14c0 9 6.5 17.5 16 20 9.5-2.5 16-11 16-20V10L24 4z"
+                    fill="currentColor"
+                    fillOpacity={isSelected ? 0.4 : 0.18}
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinejoin="round"
+                  />
+                  <text
+                    x="24"
+                    y="29"
+                    textAnchor="middle"
+                    fontFamily="var(--font-display)"
+                    fontSize="14"
+                    fontWeight="600"
+                    fill="var(--color-steel)"
+                  >
+                    {opt.label.charAt(0)}
+                  </text>
+                </svg>
+
+                <span
+                  className={
+                    "font-display text-eyebrow uppercase tracking-[0.15em] " +
+                    (isSelected ? "text-torchlight" : "text-moonlight")
+                  }
+                >
+                  {opt.label}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <button
         type="submit"

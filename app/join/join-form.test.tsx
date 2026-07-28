@@ -32,10 +32,9 @@ async function fillForm(
 ) {
   await user.type(screen.getByLabelText(/email/i), overrides?.email ?? "hermione@hogwarts.edu");
   await user.type(screen.getByLabelText(/wizard name/i), overrides?.wizardName ?? "Hermione");
-  await user.selectOptions(
-    screen.getByLabelText(/favorite house/i),
-    overrides?.favoriteHouse ?? "ravenclaw",
-  );
+  // House picker is a radio group styled as shield cards.
+  const house = overrides?.favoriteHouse ?? "ravenclaw";
+  await user.click(screen.getByRole("radio", { name: new RegExp(house, "i") }));
 }
 
 describe("JoinForm", () => {
@@ -47,14 +46,16 @@ describe("JoinForm", () => {
     render(<JoinForm />);
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/wizard name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/favorite house/i)).toBeInTheDocument();
+    // House picker: 4 radio inputs inside a fieldset named "Favorite House".
+    expect(screen.getByRole("group", { name: /favorite house/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("radio")).toHaveLength(4);
   });
 
-  it("renders all four house options", () => {
+  it("renders all four houses as radio options", () => {
     render(<JoinForm />);
-    const select = screen.getByLabelText(/favorite house/i) as HTMLSelectElement;
-    const optionValues = Array.from(select.options).map((o) => o.value);
-    expect(optionValues).toEqual(["", "gryffindor", "slytherin", "ravenclaw", "hufflepuff"]);
+    const radios = screen.getAllByRole("radio");
+    const values = radios.map((r) => (r as HTMLInputElement).value);
+    expect(values).toEqual(["gryffindor", "slytherin", "ravenclaw", "hufflepuff"]);
   });
 
   it("does NOT fire analytics when submitting with empty fields (native validation blocks)", async () => {
