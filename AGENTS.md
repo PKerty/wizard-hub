@@ -85,6 +85,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0018 | Extender taxonomy con `Fanclub Joined` (extiende ADR-0007 a v1.1) | Aceptado |
 | 0019 | Implementación de `platform` — event property en wrapper (precisa ADR-0007) | Aceptado |
 | 0020 | Estrategia responsive — mobile-first con Tailwind defaults | Aceptado |
+| 0021 | Nav hamburguesa en mobile (reemplaza parte de ADR-0020 §2) | Aceptado |
 ---
 
 ## 5. Decisiones pendientes (a resolver a continuación)
