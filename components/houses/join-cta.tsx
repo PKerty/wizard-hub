@@ -55,7 +55,7 @@ export function JoinCta({ favoriteHouseValue, houseName }: JoinCtaProps) {
         <Link
           href={`/join?favoriteHouse=${favoriteHouseValue}`}
           onClick={() => trackExploreCtaClicked({ location: "house_detail" })}
-          className="inline-flex items-center gap-2 rounded-soft bg-torchlight px-6 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:shadow-[0_0_24px_rgba(212,162,75,0.25)] hover:brightness-110"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-soft bg-torchlight px-6 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:shadow-[0_0_24px_rgba(212,162,75,0.25)] hover:brightness-110 sm:w-auto"
         >
           Join the Order
         </Link>
