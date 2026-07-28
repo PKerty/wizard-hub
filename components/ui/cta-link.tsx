@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { trackExploreCtaClicked } from "@/lib/analytics";
 import type { EventCatalog } from "@/lib/analytics/events";
 
 type ExploreLocation = EventCatalog["Explore CTA Clicked"]["location"];
 
 export interface CtaLinkProps {
-  href: string;
+  href: Route;
   /** Tracked location — see ADR-0007 `Explore CTA Clicked`. */
   location: ExploreLocation;
   children: React.ReactNode;
