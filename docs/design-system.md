@@ -101,7 +101,8 @@ Tres principios:
 
 | Token | Size / Line-height | Family | Uso |
 |---|---|---|---|
-| `text-hero` | 64 / 1.05 | Cinzel 600 | Hero del home, una vez por página |
+| `text-mega` | `clamp(48, 8vw, 96)` / 0.95 | Cinzel 600 | Hero landing pages. **1 por página máx.** Responsive fluido. |
+| `text-hero` | 64 / 1.05 | Cinzel 600 | Hero secundario, una vez por página |
 | `text-display` | 44 / 1.1 | Cinzel 600 | Título de página |
 | `text-h2` | 32 / 1.2 | Cinzel 500 | Section header |
 | `text-h3` | 24 / 1.3 | Inter 600 | Subsection |
@@ -229,17 +230,7 @@ II. JOIN THE FANCLUB
 III. YOUR JOURNEY
 ```
 
-### 3.4 Folio Indicator
-
-Esquina inferior de cada página, estilo manuscrito:
-
-```
-Folio III · /houses/slytherin
-```
-
-Usa `--font-mono` para la ruta, `--font-display` para "Folio III".
-
-### 3.5 House Card Anatomy
+### 3.4 House Card Anatomy
 
 ```
 ┌─────────────────────────────┐

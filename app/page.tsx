@@ -7,7 +7,7 @@ export default function HomePage() {
         I. The Portal Opens
       </p>
 
-      <h1 className="mt-6 font-display text-hero font-semibold leading-[1.05] text-steel">
+      <h1 className="mt-6 font-display text-mega font-semibold leading-[0.95] text-steel">
         Welcome, <span className="shimmer shimmer-text">wanderer</span>.
       </h1>
 
@@ -20,12 +20,6 @@ export default function HomePage() {
         <CtaLink href="/houses" location="hero">
           Explore the Houses
         </CtaLink>
-      </div>
-
-      <div className="mt-16 border-t border-moonlight/20 pt-6">
-        <p className="font-mono text-mono-data text-whisper">
-          Folio I · / · v0.1.0 · scaffold
-        </p>
       </div>
     </main>
   );

@@ -35,12 +35,6 @@ export default async function HousesPage() {
           ))}
         </ul>
       )}
-
-      <div className="mt-16 border-t border-moonlight/20 pt-6">
-        <p className="font-mono text-mono-data text-whisper">
-          Folio II · /houses · {houses.length} houses catalogued · ISR 24h
-        </p>
-      </div>
     </main>
   );
 }

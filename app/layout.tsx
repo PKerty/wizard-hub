@@ -3,7 +3,7 @@ import Script from "next/script";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { Providers } from "./providers";
 import { Nav } from "@/components/layout/nav";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Footer } from "@/components/layout/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function RootLayout({
         <Providers>
           <Nav />
           {children}
-          <ThemeToggle />
+          <Footer />
         </Providers>
       </body>
     </html>

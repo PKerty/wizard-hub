@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { trackExploreCtaClicked } from "@/lib/analytics";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavLinkDef {
   href: string;
@@ -22,8 +23,7 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 /**
- * Top navigation bar. Sticky, with brand on the left, links in the middle,
- * and reserved space on the right for the floating ThemeToggle.
+ * Top navigation bar. Sticky. Brand on the left, links + ThemeToggle on the right.
  *
  * Only "exploration" links (e.g., Houses) fire the `Explore CTA Clicked` event.
  * Pure-navigation links (e.g., Home) do not — keeps the metric semantically clean.
@@ -41,30 +41,33 @@ export function Nav() {
           wizard-hub
         </Link>
 
-        <ul className="flex items-center gap-8 pr-12">
-          {LINKS.map((link) => {
-            const active = isActive(pathname, link.href);
-            const handleClick = link.tracksAsExploreCta
-              ? () => trackExploreCtaClicked({ location: "nav" })
-              : undefined;
-            return (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={handleClick}
-                  aria-current={active ? "page" : undefined}
-                  className={
-                    active
-                      ? "font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight"
-                      : "font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
-                  }
-                >
-                  {link.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="flex items-center gap-8">
+          <ul className="flex items-center gap-8">
+            {LINKS.map((link) => {
+              const active = isActive(pathname, link.href);
+              const handleClick = link.tracksAsExploreCta
+                ? () => trackExploreCtaClicked({ location: "nav" })
+                : undefined;
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={handleClick}
+                    aria-current={active ? "page" : undefined}
+                    className={
+                      active
+                        ? "font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight"
+                        : "font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
+                    }
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <ThemeToggle />
+        </div>
       </nav>
     </header>
   );
