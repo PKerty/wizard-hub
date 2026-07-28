@@ -52,9 +52,10 @@ export function HouseCard({ house, source }: HouseCardProps) {
         {house.name}
       </h3>
 
-      <p className="mt-1 font-mono text-mono-data text-moonlight">
-        {house.founder} · {house.element}
-      </p>
+      <div className="mt-1 space-y-1 font-mono text-mono-data text-moonlight">
+        <p>Founder · {house.founder}</p>
+        <p>Element · {house.element}</p>
+      </div>
 
       {primaryTrait && (
         <p className="mt-3 font-body text-small italic text-moonlight/80">
