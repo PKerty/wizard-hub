@@ -39,32 +39,36 @@ describe("Nav", () => {
     expect(screen.getByText("wizard-hub")).toBeInTheDocument();
   });
 
-  it("renders links for Home and Houses", () => {
+  it("renders links for Home and Houses (desktop inline + mobile trigger)", () => {
     render(<Nav />);
-    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Houses" })).toBeInTheDocument();
+    // Both inline and inside MobileNav trigger context render the links.
+    expect(screen.getAllByRole("link", { name: "Home" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Houses" }).length).toBeGreaterThan(0);
   });
 
-  it("marks the current route's link as active", () => {
+  it("marks the current route's link as active in the desktop nav", () => {
     render(<Nav />);
-    const housesLink = screen.getByRole("link", { name: "Houses" });
-    expect(housesLink).toHaveAttribute("aria-current", "page");
+    // The desktop Houses link is the first one in DOM order.
+    const housesLinks = screen.getAllByRole("link", { name: "Houses" });
+    expect(housesLinks[0]).toHaveAttribute("aria-current", "page");
   });
 
-  it("fires trackExploreCtaClicked with location 'nav' when Houses link is clicked", async () => {
+  it("fires trackExploreCtaClicked with location 'nav' when desktop Houses link is clicked", async () => {
     const user = userEvent.setup();
     render(<Nav />);
 
-    await user.click(screen.getByRole("link", { name: "Houses" }));
+    const housesLinks = screen.getAllByRole("link", { name: "Houses" });
+    await user.click(housesLinks[0] as HTMLElement);
 
     expect(trackExploreCtaClicked).toHaveBeenCalledExactlyOnceWith({ location: "nav" });
   });
 
-  it("does NOT fire the event when Home link is clicked (Home is navigation, not exploration)", async () => {
+  it("does NOT fire the event when desktop Home link is clicked (Home is navigation, not exploration)", async () => {
     const user = userEvent.setup();
     render(<Nav />);
 
-    await user.click(screen.getByRole("link", { name: "Home" }));
+    const homeLinks = screen.getAllByRole("link", { name: "Home" });
+    await user.click(homeLinks[0] as HTMLElement);
 
     expect(trackExploreCtaClicked).not.toHaveBeenCalled();
   });
