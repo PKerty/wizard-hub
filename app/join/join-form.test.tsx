@@ -8,13 +8,28 @@ vi.mock("@/lib/analytics", () => ({
   trackFanclubJoined: vi.fn(),
 }));
 
-import { identifyFanclubMember, trackFanclubJoined } from "@/lib/analytics";
+vi.mock("@/lib/user", () => ({
+  saveWizardName: vi.fn(),
+}));
 
-async function fillForm(user: ReturnType<typeof userEvent.setup>, overrides?: Partial<{
-  email: string;
-  wizardName: string;
-  favoriteHouse: string;
-}>) {
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    refresh: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+}));
+
+import { identifyFanclubMember, trackFanclubJoined } from "@/lib/analytics";
+import { saveWizardName } from "@/lib/user";
+
+async function fillForm(
+  user: ReturnType<typeof userEvent.setup>,
+  overrides?: Partial<{ email: string; wizardName: string; favoriteHouse: string }>,
+) {
   await user.type(screen.getByLabelText(/email/i), overrides?.email ?? "hermione@hogwarts.edu");
   await user.type(screen.getByLabelText(/wizard name/i), overrides?.wizardName ?? "Hermione");
   await user.selectOptions(
@@ -46,14 +61,14 @@ describe("JoinForm", () => {
     const user = userEvent.setup();
     render(<JoinForm />);
 
-    // Submit without filling — HTML5 required validation prevents onSubmit.
     await user.click(screen.getByRole("button", { name: /join/i }));
 
     expect(identifyFanclubMember).not.toHaveBeenCalled();
     expect(trackFanclubJoined).not.toHaveBeenCalled();
+    expect(saveWizardName).not.toHaveBeenCalled();
   });
 
-  it("calls identifyFanclubMember + trackFanclubJoined with normalized values on valid submit", async () => {
+  it("calls identify + track + saveWizardName with normalized values on valid submit", async () => {
     const user = userEvent.setup();
     render(<JoinForm />);
 
@@ -65,24 +80,14 @@ describe("JoinForm", () => {
     await user.click(screen.getByRole("button", { name: /join/i }));
 
     expect(identifyFanclubMember).toHaveBeenCalledExactlyOnceWith({
-      email: "hermione@hogwarts.edu", // normalized: trim + lowercase
+      email: "hermione@hogwarts.edu",
       wizardName: "Hermione",
       favoriteHouse: "ravenclaw",
     });
     expect(trackFanclubJoined).toHaveBeenCalledExactlyOnceWith({
       favoriteHouse: "ravenclaw",
-      wizardNameLength: 8, // "Hermione".length
+      wizardNameLength: 8,
     });
-  });
-
-  it("shows a success message after submit and hides the form", async () => {
-    const user = userEvent.setup();
-    render(<JoinForm />);
-
-    await fillForm(user);
-    await user.click(screen.getByRole("button", { name: /join/i }));
-
-    expect(screen.getByText(/welcome/i)).toBeInTheDocument();
-    expect(screen.queryByLabelText(/email/i)).not.toBeInTheDocument();
+    expect(saveWizardName).toHaveBeenCalledExactlyOnceWith("Hermione");
   });
 });

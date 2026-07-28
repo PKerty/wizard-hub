@@ -3,8 +3,10 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
-import { trackExploreCtaClicked } from "@/lib/analytics";
+import { useSyncExternalStore } from "react";
+import { trackExploreCtaClicked, resetUserIdentity } from "@/lib/analytics";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { WIZARD_NAME_STORAGE_KEY, readWizardName, clearWizardName } from "@/lib/user";
 
 interface NavLinkDef {
   href: Route;
@@ -16,7 +18,6 @@ interface NavLinkDef {
 const LINKS = [
   { href: "/", label: "Home", tracksAsExploreCta: false },
   { href: "/houses", label: "Houses", tracksAsExploreCta: true },
-  { href: "/join", label: "Join", tracksAsExploreCta: false },
 ] as const satisfies readonly NavLinkDef[];
 
 function isActive(pathname: string, href: string): boolean {
@@ -24,14 +25,41 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function subscribe(callback: () => void): () => void {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getWizardNameSnapshot(): string | null {
+  return readWizardName();
+}
+
+function getWizardNameServerSnapshot(): string | null {
+  return null;
+}
+
 /**
  * Top navigation bar. Sticky. Brand on the left, links + ThemeToggle on the right.
  *
- * Only "exploration" links (e.g., Houses) fire the `Explore CTA Clicked` event.
- * Pure-navigation links (e.g., Home) do not — keeps the metric semantically clean.
+ * When the user is known (localStorage has wizardName), the "Join" link is
+ * replaced by a "Sign Out" button that resets identity and clears the stored
+ * name. Only "exploration" links (Houses) fire `Explore CTA Clicked`.
  */
 export function Nav() {
   const pathname = usePathname() ?? "/";
+  const wizardName = useSyncExternalStore(
+    subscribe,
+    getWizardNameSnapshot,
+    getWizardNameServerSnapshot,
+  );
+  const isKnown = wizardName !== null;
+
+  const handleSignOut = () => {
+    resetUserIdentity();
+    clearWizardName();
+    // Dispatch a storage event so other tabs/subscribers (WizardGreeting, Nav) update.
+    window.dispatchEvent(new Event("storage"));
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-moonlight/20 bg-bg-mist/70 backdrop-blur">
@@ -67,6 +95,24 @@ export function Nav() {
                 </li>
               );
             })}
+            <li>
+              {isKnown ? (
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-torchlight"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <Link
+                  href="/join"
+                  className="font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
+                >
+                  Join
+                </Link>
+              )}
+            </li>
           </ul>
           <ThemeToggle />
         </div>
@@ -74,3 +120,6 @@ export function Nav() {
     </header>
   );
 }
+
+// Re-export for tests that need to manipulate storage.
+export { WIZARD_NAME_STORAGE_KEY };

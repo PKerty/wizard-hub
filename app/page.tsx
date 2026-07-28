@@ -1,4 +1,5 @@
 import { CtaLink } from "@/components/ui/cta-link";
+import { WizardGreeting } from "@/components/wizard-greeting";
 
 export default function HomePage() {
   return (
@@ -8,7 +9,7 @@ export default function HomePage() {
       </p>
 
       <h1 className="mt-6 font-display text-mega font-semibold leading-[0.95] text-steel">
-        Welcome, <span className="shimmer shimmer-text">wanderer</span>.
+        Welcome, <WizardGreeting />.
       </h1>
 
       <p className="mt-8 max-w-2xl font-body text-body-lg text-moonlight">

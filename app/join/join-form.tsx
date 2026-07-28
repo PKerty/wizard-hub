@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { identifyFanclubMember, trackFanclubJoined } from "@/lib/analytics";
+import { saveWizardName } from "@/lib/user";
 
 const HOUSE_OPTIONS = [
   { value: "gryffindor", label: "Gryffindor" },
@@ -27,15 +29,17 @@ const INITIAL_STATE: FormState = {
 /**
  * "Join the Fanclub" form (ADR-0008).
  *
- * On submit: normalizes email (trim + lowercase), calls identifyFanclubMember
- * (sets user_id + user properties) and fires the Fanclub Joined event with
- * length instead of the name to avoid PII in event properties.
+ * On submit:
+ * 1. Calls identifyFanclubMember (Amplitude setUserId + user properties).
+ * 2. Fires Fanclub Joined event.
+ * 3. Saves wizardName to localStorage so the UI can greet personally.
+ * 4. Redirects to / where the hero swaps "wanderer" → wizardName.
  *
- * No backend — purely client-side identity assignment via the Amplitude wrapper.
+ * No backend — purely client-side identity assignment.
  */
 export function JoinForm() {
+  const router = useRouter();
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
-  const [submitted, setSubmitted] = useState(false);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -58,22 +62,9 @@ export function JoinForm() {
       favoriteHouse,
       wizardNameLength: wizardName.length,
     });
+    saveWizardName(wizardName);
 
-    setSubmitted(true);
-  }
-
-  if (submitted) {
-    return (
-      <div className="border border-moonlight/30 bg-bg-mist/40 rounded-card p-8">
-        <p className="font-display text-h2 font-semibold text-steel">
-          Welcome, <span className="shimmer shimmer-text">{form.wizardName.trim()}</span>.
-        </p>
-        <p className="mt-4 font-body text-body-lg text-moonlight">
-          You are now bound to <span className="text-torchlight">{form.favoriteHouse}</span>.
-          The crystal orb will remember you.
-        </p>
-      </div>
-    );
+    router.push("/");
   }
 
   return (
