@@ -6,7 +6,13 @@ export const metadata: Metadata = {
   description: "Bind your crystal orb to a house and join the wizard-hub fanclub.",
 };
 
-export default function JoinPage() {
+interface PageProps {
+  searchParams: Promise<{ favoriteHouse?: string }>;
+}
+
+export default async function JoinPage({ searchParams }: PageProps) {
+  const { favoriteHouse } = await searchParams;
+
   return (
     <main className="mx-auto max-w-2xl px-6 py-16 md:py-24">
       <p className="font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight">
@@ -23,7 +29,7 @@ export default function JoinPage() {
       </p>
 
       <div className="mt-16">
-        <JoinForm />
+        <JoinForm initialFavoriteHouse={favoriteHouse} />
       </div>
     </main>
   );

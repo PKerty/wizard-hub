@@ -12,6 +12,7 @@ const HOUSE_OPTIONS = [
   { value: "hufflepuff", label: "Hufflepuff", color: "var(--color-house-hufflepuff)" },
 ] as const;
 
+const HOUSE_VALUES = HOUSE_OPTIONS.map((o) => o.value);
 type FavoriteHouse = (typeof HOUSE_OPTIONS)[number]["value"];
 
 interface FormState {
@@ -20,11 +21,13 @@ interface FormState {
   favoriteHouse: FavoriteHouse | "";
 }
 
-const INITIAL_STATE: FormState = {
-  email: "",
-  wizardName: "",
-  favoriteHouse: "",
-};
+function buildInitialState(initialFavoriteHouse?: string): FormState {
+  const valid =
+    initialFavoriteHouse && HOUSE_VALUES.includes(initialFavoriteHouse as FavoriteHouse)
+      ? (initialFavoriteHouse as FavoriteHouse)
+      : "";
+  return { email: "", wizardName: "", favoriteHouse: valid };
+}
 
 /**
  * "Join the Fanclub" form (ADR-0008).
@@ -35,13 +38,13 @@ const INITIAL_STATE: FormState = {
  * 3. Saves wizardName to localStorage so the UI can greet personally.
  * 4. Redirects to / where the hero swaps "wanderer" → wizardName.
  *
- * House picker is a radio group styled as shield cards (replaces a flat <select>
- * — more engaging and on-brand with the heraldry motif). Each card wraps a
- * visually-hidden radio input so keyboard + screen-reader UX stays native.
+ * Optional `initialFavoriteHouse` (from ?favoriteHouse=<id> query string)
+ * pre-selects a house — used by the JoinCta on the house detail page so users
+ * don't have to re-pick the house they were just viewing.
  */
-export function JoinForm() {
+export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: string }) {
   const router = useRouter();
-  const [form, setForm] = useState<FormState>(INITIAL_STATE);
+  const [form, setForm] = useState<FormState>(() => buildInitialState(initialFavoriteHouse));
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));

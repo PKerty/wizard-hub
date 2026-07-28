@@ -20,7 +20,7 @@ export interface HouseCardClickedProperties {
 }
 
 export interface ExploreCtaClickedProperties {
-  location: "hero" | "nav" | "footer";
+  location: "hero" | "nav" | "footer" | "house_detail";
 }
 
 export interface BackToHousesClickedProperties {

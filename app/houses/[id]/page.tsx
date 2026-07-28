@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getAllHouses, getHouseById } from "@/modules/houses";
 import { HouseViewedTracker } from "./house-viewed-tracker";
 import { BackToHouses } from "@/components/houses/back-to-houses";
+import { JoinCta } from "@/components/houses/join-cta";
 
 // ADR-0005: ISR for catalog (24h revalidate).
 export const revalidate = 86400;
@@ -94,6 +95,8 @@ export default async function HouseDetailPage({ params, searchParams }: PageProp
           </ul>
         </section>
       )}
+
+      <JoinCta favoriteHouseValue={house.name.toLowerCase()} houseName={house.name} />
     </main>
   );
 }
