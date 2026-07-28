@@ -3,7 +3,7 @@
 - **Estado:** Aceptado
 - **Fecha:** 2026-07-27
 - **Decisor(es):** kerty + arquitecto
-- **Relacionado:** ADR-0006 (wrapper), ADR-0008 (user lifecycle), AMP-002
+- **Relacionado:** ADR-0006 (wrapper), ADR-0008 (user lifecycle), ADR-0019 (`platform` event property), AMP-002
 
 ## Contexto
 Necesitamos un catálogo de eventos y propiedades que:
@@ -24,11 +24,17 @@ Necesitamos un catálogo de eventos y propiedades que:
 - **Booleanos:** prefix `is` o `has` (`isAnonymous`, `hasAccount`).
 - **Enums:** valores en `snake_case` para legibilidad en dashboards (`source: 'home'`).
 
+### Propiedad común a todos los eventos: `platform`
+
+ADR-0019 precisa que **todos** los eventos del catálogo (v1 y futuros) llevan automáticamente la propiedad `platform` (`'web-desktop' | 'web-mobile' | 'web-tablet'`), adjuntada por el wrapper sin que los call sites lo hagan explícito. En SSR se omite la property en lugar de enviar `null`.
+
+Esto habilita la métrica del challenge "All Houses Viewed by Platform" sobre `House Viewed` y, de paso, cualquier segmentación cross-evento por device.
+
 ### Catálogo v1 (minimal — Houses)
 
 | Evento | Cuándo | Props | Soporta |
 |---|---|---|---|
-| `Page Viewed` | Auto vía SDK `defaultTracking.pageViews: true` | `path`, `title`, `referrer` (auto) + `platform` (custom) | **Métrica 2** |
+| `Page Viewed` | Auto vía SDK `defaultTracking.pageViews: true` | `path`, `title`, `referrer` (auto) | **Métrica 2** (vía `House Viewed` también) |
 | `House Viewed` | Entrada a `/houses/[id]` | `houseId`, `houseName`, `houseFounder`, `source` (`'list' \| 'home' \| 'direct'`) | **Métrica 1** |
 | `House Card Clicked` | Click en card de casa | `houseId`, `houseName`, `source` (`'home' \| 'houses_list'`) | interacción |
 | `Explore CTA Clicked` | Click en CTA "explorar" | `location` (`'hero' \| 'nav' \| 'footer'`) | interacción |
@@ -66,11 +72,11 @@ Necesitamos un catálogo de eventos y propiedades que:
 
 ### Métrica 2 — "All Houses" Viewed by Platform (Event Totals)
 
-- Evento: `Page Viewed` con `path = '/houses'`.
-- Dimensión: `platform` (valores: `'web-desktop' \| 'web-mobile' \| 'web-tablet'`, derivado de UA al init).
+- Evento: `House Viewed` (principal) o `Page Viewed` con `path = '/houses'` (secundario).
+- Dimensión: `platform` (propiedad común a todos los eventos — ver ADR-0019).
 - Métrica: Event Totals.
 
-`platform` se setea al inicializar el wrapper, basándose en `navigator.userAgent` + `window.innerWidth`. Se envía como prop en todos los `Page Viewed`.
+`platform` se calcula en el wrapper basándose en `navigator.userAgent` (con `window.innerWidth` reservado para futuros ajustes). SSR-safe: en server se omite la property. Ver ADR-0019 para el mecanismo completo y el manejo de usuarios anónimos.
 
 ## Análisis futuros (no implementan events extra ahora — solo documentación)
 
