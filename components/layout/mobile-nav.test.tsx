@@ -189,4 +189,27 @@ describe("MobileNav (ADR-0021)", () => {
     await user.keyboard("{Escape}");
     expect(document.body.style.overflow).toBe("");
   });
+
+  it("closes drawer when the footer node is clicked (e.g. Join link)", async () => {
+    const user = userEvent.setup();
+    render(
+      <MobileNav
+        links={LINKS}
+        isActive={() => false}
+        onLinkClick={() => {}}
+        footer={
+          <a href="/join" data-testid="footer-join">
+            Join
+          </a>
+        }
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("footer-join"));
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
 });

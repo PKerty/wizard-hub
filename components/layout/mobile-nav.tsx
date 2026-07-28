@@ -133,7 +133,14 @@ export function MobileNav({ links, isActive, onLinkClick, footer }: MobileNavPro
                   </Link>
                 );
               })}
-              {footer ? <div className="mt-2 border-t border-moonlight/20 pt-2">{footer}</div> : null}
+              {footer ? (
+                <div
+                  className="mt-2 border-t border-moonlight/20 pt-2"
+                  onClick={close}
+                >
+                  {footer}
+                </div>
+              ) : null}
             </nav>
           </div>
         </>
