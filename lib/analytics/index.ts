@@ -7,7 +7,7 @@ import {
   initAnalytics,
   setUserId,
   resetIdentity,
-  trackRawEvent,
+  sendEvent,
   identifyUserProperties,
 } from "./client";
 import type { EventCatalog } from "./events";
@@ -21,53 +21,53 @@ export function init(): void {
 /* ==================== Tracking (typed wrappers per event) ==================== */
 
 export function trackHouseViewed(props: EventCatalog["House Viewed"]): void {
-  trackRawEvent("House Viewed", props);
+  sendEvent("House Viewed", props);
 }
 
 export function trackHouseCardClicked(props: EventCatalog["House Card Clicked"]): void {
-  trackRawEvent("House Card Clicked", props);
+  sendEvent("House Card Clicked", props);
 }
 
 export function trackExploreCtaClicked(props: EventCatalog["Explore CTA Clicked"]): void {
-  trackRawEvent("Explore CTA Clicked", props);
+  sendEvent("Explore CTA Clicked", props);
 }
 
 export function trackBackToHousesClicked(props: EventCatalog["Back To Houses Clicked"]): void {
-  trackRawEvent("Back To Houses Clicked", props);
+  sendEvent("Back To Houses Clicked", props);
 }
 
 export function trackExternalLinkClicked(props: EventCatalog["External Link Clicked"]): void {
-  trackRawEvent("External Link Clicked", props);
+  sendEvent("External Link Clicked", props);
 }
 
 export function trackThemeToggled(props: EventCatalog["Theme Toggled"]): void {
-  trackRawEvent("Theme Toggled", props);
+  sendEvent("Theme Toggled", props);
 }
 
 export function trackFanclubJoined(props: EventCatalog["Fanclub Joined"]): void {
-  trackRawEvent("Fanclub Joined", props);
+  sendEvent("Fanclub Joined", props);
 }
 
 /* ==================== Potions game (ADR-0025 — taxonomy v1.2) ==================== */
 
 export function trackPotionGameStarted(props: EventCatalog["Potion Game Started"]): void {
-  trackRawEvent("Potion Game Started", props);
+  sendEvent("Potion Game Started", props);
 }
 
 export function trackPotionRoundPlayed(props: EventCatalog["Potion Round Played"]): void {
-  trackRawEvent("Potion Round Played", props);
+  sendEvent("Potion Round Played", props);
 }
 
 export function trackPotionGameWon(props: EventCatalog["Potion Game Won"]): void {
-  trackRawEvent("Potion Game Won", props);
+  sendEvent("Potion Game Won", props);
 }
 
 export function trackPotionGameLost(props: EventCatalog["Potion Game Lost"]): void {
-  trackRawEvent("Potion Game Lost", props);
+  sendEvent("Potion Game Lost", props);
 }
 
 export function trackPotionGameRestarted(props: EventCatalog["Potion Game Restarted"]): void {
-  trackRawEvent("Potion Game Restarted", props);
+  sendEvent("Potion Game Restarted", props);
 }
 
 /* ==================== Identity (ADR-0008) ==================== */

@@ -26,7 +26,7 @@ vi.mock("@/lib/config/env", () => ({
 }));
 
 import * as amplitude from "@amplitude/unified";
-import { trackRawEvent, initAnalytics } from "@/lib/analytics/client";
+import { sendEvent, initAnalytics } from "@/lib/analytics/client";
 import { __resetPlatformCacheForTests } from "@/lib/analytics/platform";
 
 type TrackCall = [name: string, payload: Record<string, unknown>];
@@ -41,7 +41,7 @@ function lastTrackCall(): TrackCall {
   return calls[calls.length - 1] as TrackCall;
 }
 
-describe("trackRawEvent — ADR-0019 platform injection", () => {
+describe("sendEvent — ADR-0019 platform injection", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     __resetPlatformCacheForTests();
@@ -60,7 +60,7 @@ describe("trackRawEvent — ADR-0019 platform injection", () => {
     });
     vi.stubGlobal("window", { innerWidth: 390 });
 
-    trackRawEvent("House Viewed", {
+    sendEvent("House Viewed", {
       houseId: "gryffindor-id",
       houseName: "Gryffindor",
       houseFounder: "Godric Gryffindor",
@@ -78,7 +78,7 @@ describe("trackRawEvent — ADR-0019 platform injection", () => {
   it("omits platform when navigator is unavailable (SSR)", () => {
     vi.stubGlobal("navigator", undefined);
 
-    trackRawEvent("Theme Toggled", { newTheme: "dark" });
+    sendEvent("Theme Toggled", { newTheme: "dark" });
 
     const [, payload] = lastTrackCall();
     expect(payload).toEqual({ newTheme: "dark" });
@@ -92,7 +92,7 @@ describe("trackRawEvent — ADR-0019 platform injection", () => {
     });
     vi.stubGlobal("window", { innerWidth: 1440 });
 
-    trackRawEvent("House Card Clicked", {
+    sendEvent("House Card Clicked", {
       houseId: "x",
       houseName: "X",
       source: "home",
@@ -103,7 +103,7 @@ describe("trackRawEvent — ADR-0019 platform injection", () => {
         "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) AppleWebKit/605.1.15",
     });
 
-    trackRawEvent("Back To Houses Clicked", { fromHouseId: "x" });
+    sendEvent("Back To Houses Clicked", { fromHouseId: "x" });
 
     const [, secondPayload] = lastTrackCall();
     expect(secondPayload.platform).toBe("web-desktop");

@@ -57,7 +57,7 @@ export function resetIdentity(): void {
   amplitude.reset();
 }
 
-export function trackRawEvent<N extends keyof EventCatalog>(
+export function sendEvent<N extends keyof EventCatalog>(
   name: N,
   properties: EventCatalog[N],
 ): void {
