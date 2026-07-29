@@ -2,6 +2,10 @@
  * Amplitude event catalog — ADR-0007.
  * Single source of truth for event names and property shapes.
  * The wrapper (index.ts) is the only API consumers should use.
+ *
+ * NOTE: `External Link Clicked` was part of ADR-0007 v1 but is NOT included
+ * here — the product has no outbound external links, so the event would never
+ * fire. It can be reintroduced if external links are added in the future.
  */
 
 /* ==================== v1 events (Houses — minimal) ==================== */
@@ -25,11 +29,6 @@ export interface ExploreCtaClickedProperties {
 
 export interface BackToHousesClickedProperties {
   fromHouseId: string;
-}
-
-export interface ExternalLinkClickedProperties {
-  target: string;
-  location: string;
 }
 
 export interface ThemeToggledProperties {
@@ -90,7 +89,6 @@ export interface EventCatalog {
   "House Card Clicked": HouseCardClickedProperties;
   "Explore CTA Clicked": ExploreCtaClickedProperties;
   "Back To Houses Clicked": BackToHousesClickedProperties;
-  "External Link Clicked": ExternalLinkClickedProperties;
   "Theme Toggled": ThemeToggledProperties;
   "Fanclub Joined": FanclubJoinedProperties;
   "Potion Game Started": PotionGameStartedProperties;
