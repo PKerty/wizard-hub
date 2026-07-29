@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BackToHouses } from "./back-to-houses";
+import { BackToHouses } from "@/components/houses/back-to-houses";
 
 vi.mock("@/lib/analytics", () => ({
   trackBackToHousesClicked: vi.fn(),

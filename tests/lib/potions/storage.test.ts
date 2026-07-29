@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { HIGH_SCORE_STORAGE_KEY, readHighScore, saveHighScore } from "./storage";
+import { HIGH_SCORE_STORAGE_KEY, readHighScore, saveHighScore } from "@/lib/potions/storage";
 
 describe("potions high score storage", () => {
   describe("HIGH_SCORE_STORAGE_KEY", () => {

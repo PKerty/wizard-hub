@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
-import { HouseViewedTracker } from "./house-viewed-tracker";
+import { HouseViewedTracker } from "@/app/houses/[id]/house-viewed-tracker";
 
 vi.mock("@/lib/analytics", () => ({
   trackHouseViewed: vi.fn(),

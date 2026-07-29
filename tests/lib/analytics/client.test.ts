@@ -26,8 +26,8 @@ vi.mock("@/lib/config/env", () => ({
 }));
 
 import * as amplitude from "@amplitude/unified";
-import { trackRawEvent, initAnalytics } from "./client";
-import { __resetPlatformCacheForTests } from "./platform";
+import { trackRawEvent, initAnalytics } from "@/lib/analytics/client";
+import { __resetPlatformCacheForTests } from "@/lib/analytics/platform";
 
 type TrackCall = [name: string, payload: Record<string, unknown>];
 

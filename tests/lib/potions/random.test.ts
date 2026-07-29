@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shuffle, pickRandom } from "./random";
+import { shuffle, pickRandom } from "@/lib/potions/random";
 
 describe("shuffle", () => {
   it("returns an empty array for an empty array (degenerate case)", () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { createGetAllPotionsUseCase } from "./get-all-potions.usecase";
-import type { PotionsRepository } from "../domain/potions-repository.port";
-import type { Potion } from "../domain/potion";
+import { createGetAllPotionsUseCase } from "@/modules/potions/application/get-all-potions.usecase";
+import type { PotionsRepository } from "@/modules/potions/domain/potions-repository.port";
+import type { Potion } from "@/modules/potions/domain/potion";
 
 function makeStubRepo(overrides: Partial<PotionsRepository> = {}): PotionsRepository {
   return {

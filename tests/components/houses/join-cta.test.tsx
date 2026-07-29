@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { JoinCta } from "./join-cta";
+import { JoinCta } from "@/components/houses/join-cta";
 
 vi.mock("@/lib/analytics", () => ({
   trackExploreCtaClicked: vi.fn(),
