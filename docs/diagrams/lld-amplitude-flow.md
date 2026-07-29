@@ -9,8 +9,11 @@
 
 ```mermaid
 stateDiagram-v2
+    direction LR
     [*] --> Anonymous
+    Anonymous --> Anonymous: track events
     Anonymous --> Known: Submit form Únete
+    Known --> Known: track events
     Known --> Anonymous: Sign Out
     Known --> [*]
 ```
