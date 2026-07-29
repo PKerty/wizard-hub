@@ -48,6 +48,28 @@ export function trackFanclubJoined(props: EventCatalog["Fanclub Joined"]): void 
   trackRawEvent("Fanclub Joined", props);
 }
 
+/* ==================== Potions game (ADR-0025 — taxonomy v1.2) ==================== */
+
+export function trackPotionGameStarted(props: EventCatalog["Potion Game Started"]): void {
+  trackRawEvent("Potion Game Started", props);
+}
+
+export function trackPotionRoundPlayed(props: EventCatalog["Potion Round Played"]): void {
+  trackRawEvent("Potion Round Played", props);
+}
+
+export function trackPotionGameWon(props: EventCatalog["Potion Game Won"]): void {
+  trackRawEvent("Potion Game Won", props);
+}
+
+export function trackPotionGameLost(props: EventCatalog["Potion Game Lost"]): void {
+  trackRawEvent("Potion Game Lost", props);
+}
+
+export function trackPotionGameRestarted(props: EventCatalog["Potion Game Restarted"]): void {
+  trackRawEvent("Potion Game Restarted", props);
+}
+
 /* ==================== Identity (ADR-0008) ==================== */
 
 export interface FanclubMember {
