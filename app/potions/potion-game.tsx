@@ -9,6 +9,13 @@ import {
 } from "@/lib/potions/game-reducer";
 import { pickRandom } from "@/lib/potions/random";
 import { readHighScore, saveHighScore } from "@/lib/potions/storage";
+import {
+  trackPotionGameLost,
+  trackPotionGameRestarted,
+  trackPotionGameStarted,
+  trackPotionGameWon,
+  trackPotionRoundPlayed,
+} from "@/lib/analytics";
 import { IngredientCard, type CardTone } from "@/components/potions/ingredient-card";
 
 export interface PotionGameProps {
@@ -28,20 +35,50 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
 
   const { status, session, roundIndex, cauldronIds } = state;
 
-  const start = useCallback(() => {
+  const beginGame = useCallback(() => {
     const potion = pickRandom(potions);
     dispatch({
       type: "START",
       session: createGameSession(potion, ingredients),
       startedAt: Date.now(),
     });
+    trackPotionGameStarted({
+      potionId: potion.id,
+      potionName: potion.name,
+      recipeSize: potion.ingredientIds.length,
+    });
   }, [potions, ingredients]);
 
-  useEffect(() => {
-    if (status === "won" || status === "lost") {
-      saveHighScore(cauldronIds.length);
+  const handleRestart = () => {
+    if (session && (status === "won" || status === "lost")) {
+      trackPotionGameRestarted({
+        previousPotionId: session.potion.id,
+        previousOutcome: status,
+      });
     }
-  }, [status, cauldronIds.length]);
+    beginGame();
+  };
+
+  useEffect(() => {
+    if (!session) return;
+    if (status === "won") {
+      saveHighScore(cauldronIds.length);
+      trackPotionGameWon({
+        potionId: session.potion.id,
+        potionName: session.potion.name,
+        roundsCompleted: cauldronIds.length,
+        durationSec: Math.round((Date.now() - state.startedAt) / 1000),
+      });
+    } else if (status === "lost") {
+      saveHighScore(cauldronIds.length);
+      trackPotionGameLost({
+        potionId: session.potion.id,
+        potionName: session.potion.name,
+        round: state.lostRound ?? roundIndex + 1,
+        failedCardIndex: state.failedCardIndex ?? 0,
+      });
+    }
+  }, [status, cauldronIds.length, session, state.startedAt, state.lostRound, state.failedCardIndex, roundIndex]);
 
   const highScore = useSyncExternalStore(
     (cb) => {
@@ -64,7 +101,7 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
         )}
         <button
           type="button"
-          onClick={start}
+          onClick={beginGame}
           className="inline-flex items-center justify-center rounded-soft bg-torchlight px-8 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:shadow-[0_0_24px_rgba(212,162,75,0.25)] hover:brightness-110"
         >
           Start brewing
@@ -159,7 +196,15 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
                 name={nameById.get(card.id) ?? card.name}
                 tone={tone}
                 disabled={reveal}
-                onSelect={() => dispatch({ type: "GUESS", ingredientId: card.id, cardIndex: idx as 0 | 1 | 2 })}
+                onSelect={() => {
+                  trackPotionRoundPlayed({
+                    potionId: session.potion.id,
+                    round: roundIndex + 1,
+                    cardIndex: idx as 0 | 1 | 2,
+                    correct: card.id === round.correctId,
+                  });
+                  dispatch({ type: "GUESS", ingredientId: card.id, cardIndex: idx as 0 | 1 | 2 });
+                }}
               />
             );
           })}
@@ -170,7 +215,7 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
       {reveal && (
         <button
           type="button"
-          onClick={start}
+          onClick={handleRestart}
           className="mt-8 inline-flex items-center justify-center rounded-soft border border-moonlight bg-bg-mist/40 px-8 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-steel transition-all duration-base ease-arcane hover:border-torchlight hover:text-torchlight"
         >
           Brew again

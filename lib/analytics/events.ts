@@ -44,6 +44,45 @@ export interface FanclubJoinedProperties {
   wizardNameLength: number;
 }
 
+/* ==================== v1.2 events — Potions game (ADR-0025) ==================== */
+
+export interface PotionGameStartedProperties {
+  potionId: string;
+  potionName: string;
+  /** Total ingredients in the recipe = number of rounds. */
+  recipeSize: number;
+}
+
+export interface PotionRoundPlayedProperties {
+  potionId: string;
+  /** 1-indexed round. */
+  round: number;
+  /** Position of the clicked card (0 = left, 1 = center, 2 = right). */
+  cardIndex: 0 | 1 | 2;
+  correct: boolean;
+}
+
+export interface PotionGameWonProperties {
+  potionId: string;
+  potionName: string;
+  roundsCompleted: number;
+  /** Elapsed seconds from Started to Won. */
+  durationSec: number;
+}
+
+export interface PotionGameLostProperties {
+  potionId: string;
+  potionName: string;
+  /** 1-indexed round where the user failed. */
+  round: number;
+  failedCardIndex: 0 | 1 | 2;
+}
+
+export interface PotionGameRestartedProperties {
+  previousPotionId: string;
+  previousOutcome: "won" | "lost";
+}
+
 /* ==================== Event name + property map ==================== */
 
 export interface EventCatalog {
@@ -54,6 +93,11 @@ export interface EventCatalog {
   "External Link Clicked": ExternalLinkClickedProperties;
   "Theme Toggled": ThemeToggledProperties;
   "Fanclub Joined": FanclubJoinedProperties;
+  "Potion Game Started": PotionGameStartedProperties;
+  "Potion Round Played": PotionRoundPlayedProperties;
+  "Potion Game Won": PotionGameWonProperties;
+  "Potion Game Lost": PotionGameLostProperties;
+  "Potion Game Restarted": PotionGameRestartedProperties;
 }
 
 export type EventName = keyof EventCatalog;
