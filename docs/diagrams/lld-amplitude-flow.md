@@ -5,16 +5,17 @@
 
 ## State diagram
 
-> Vista conceptual. La tabla de abajo lista los detalles técnicos (device_id, user properties, catálogo de eventos) y el sequence diagram muestra el flujo completo del submit.
+> Vista conceptual de los cambios de estado (ADR-0008). El detalle técnico (device_id, user properties, catálogo de eventos en cada estado) está en la tabla de abajo; el flujo completo del submit en el sequence diagram.
 
 ```mermaid
 stateDiagram-v2
     [*] --> Anonymous
     Anonymous --> Known: Submit form Únete
     Known --> Anonymous: Sign Out
-    Anonymous --> Anonymous: track events
-    Known --> Known: track events
+    Known --> [*]
 ```
+
+> En **ambos** estados el usuario trackea eventos (`House Viewed`, `Explore CTA Clicked`, etc.) con la prop `platform` adjunta. La diferencia es la identidad: `device_id` anónimo vs `user_id = email`.
 
 ## Sequence — Join flow
 
