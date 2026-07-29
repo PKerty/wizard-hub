@@ -5,7 +5,7 @@ import {
   getNextTheme,
   readPersistedTheme,
   resolveInitialTheme,
-} from "./index";
+} from "@/lib/theme/index";
 
 describe("theme lib", () => {
   describe("VALID_THEMES", () => {

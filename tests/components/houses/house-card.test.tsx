@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { HouseCard } from "./house-card";
+import { HouseCard } from "@/components/houses/house-card";
 import type { House } from "@/modules/houses";
 
 // Mock the analytics wrapper so we can assert calls without touching amplitude.

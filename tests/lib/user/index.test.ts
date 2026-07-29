@@ -5,7 +5,7 @@ import {
   saveWizardName,
   clearWizardName,
   isUserKnown,
-} from "./index";
+} from "@/lib/user/index";
 
 describe("user lib", () => {
   describe("WIZARD_NAME_STORAGE_KEY", () => {

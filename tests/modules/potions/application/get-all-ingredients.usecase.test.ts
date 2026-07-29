@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { createGetAllIngredientsUseCase } from "./get-all-ingredients.usecase";
-import type { PotionsRepository } from "../domain/potions-repository.port";
-import type { Ingredient } from "../domain/ingredient";
+import { createGetAllIngredientsUseCase } from "@/modules/potions/application/get-all-ingredients.usecase";
+import type { PotionsRepository } from "@/modules/potions/domain/potions-repository.port";
+import type { Ingredient } from "@/modules/potions/domain/ingredient";
 
 function makeStubRepo(overrides: Partial<PotionsRepository> = {}): PotionsRepository {
   return {

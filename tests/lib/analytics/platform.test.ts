@@ -3,7 +3,7 @@ import {
   detectPlatform,
   computePlatform,
   __resetPlatformCacheForTests,
-} from "./platform";
+} from "@/lib/analytics/platform";
 
 describe("detectPlatform (pure logic)", () => {
   describe("degenerate: SSR / unknown", () => {

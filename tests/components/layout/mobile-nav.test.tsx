@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MobileNav } from "./mobile-nav";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import type { Route } from "next";
 
 vi.mock("next/link", () => ({

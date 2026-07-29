@@ -3,7 +3,7 @@ import {
   wizardWorldFetch,
   wizardWorldFetchSafe,
   WizardWorldApiError,
-} from "./wizard-world.client";
+} from "@/lib/api/wizard-world.client";
 
 function okResponse(body: unknown): Response {
   return { ok: true, status: 200, json: async () => body } as Response;

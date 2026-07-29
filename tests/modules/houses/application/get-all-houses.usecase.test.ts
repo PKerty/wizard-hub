@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createGetAllHousesUseCase } from "./get-all-houses.usecase";
-import type { HousesRepository } from "../domain/house-repository.port";
+import { createGetAllHousesUseCase } from "@/modules/houses/application/get-all-houses.usecase";
+import type { HousesRepository } from "@/modules/houses/domain/house-repository.port";
 
 /**
  * TDD anchor (ADR-0012).
