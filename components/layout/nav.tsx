@@ -91,7 +91,7 @@ export function Nav() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link
           href="/"
-          className="font-display text-eyebrow uppercase tracking-[0.25em] text-torchlight"
+          className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.25em] text-torchlight"
         >
           wizard-hub
         </Link>
