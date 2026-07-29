@@ -33,3 +33,26 @@ export interface HouseResponse {
   heads: HouseHeadResponse[];
   traits: HouseTraitResponse[];
 }
+
+/* ==================== Elixirs / Ingredients (ADR-0022) ==================== */
+/* Raw shapes of the /Elixirs and /Ingredients resources. Infrastructure only;
+   the adapter maps these into domain Potion/Ingredient entities. */
+
+export interface ElixirIngredientResponse {
+  id: string;
+  name: string;
+}
+
+export interface ElixirResponse {
+  id: string;
+  name: string;
+  effect: string | null;
+  sideEffects: string | null;
+  difficulty: string | null;
+  ingredients: ElixirIngredientResponse[];
+}
+
+export interface IngredientResponse {
+  id: string;
+  name: string;
+}
