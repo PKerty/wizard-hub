@@ -89,6 +89,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0022 | Nuevo módulo `potions` (bounded context hexagonal) | Aceptado |
 | 0023 | Diseño del Potions game — reglas, scoring, fin | Aceptado |
 | 0024 | Fetching y generación de distractors — Potions game | Aceptado |
+| 0025 | Taxonomía v1.2 — eventos del Potions game (extiende ADR-0007) | Aceptado |
 ---
 
 ## 5. Decisiones pendientes (a resolver a continuación)
