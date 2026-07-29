@@ -36,10 +36,6 @@ export function trackBackToHousesClicked(props: EventCatalog["Back To Houses Cli
   sendEvent("Back To Houses Clicked", props);
 }
 
-export function trackExternalLinkClicked(props: EventCatalog["External Link Clicked"]): void {
-  sendEvent("External Link Clicked", props);
-}
-
 export function trackThemeToggled(props: EventCatalog["Theme Toggled"]): void {
   sendEvent("Theme Toggled", props);
 }
