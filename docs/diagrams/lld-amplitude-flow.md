@@ -48,15 +48,17 @@ sequenceDiagram
 
 | Estado | Eventos posibles | User properties |
 |---|---|---|
-| **Anonymous** | Todos los del catálogo v1.1 (con `platform` adjunta) | `lifecycleStage: 'anonymous'` |
-| **Known** | Todos los del catálogo v1.1 (con `platform` adjunta) | `lifecycleStage: 'known'`, `wizardName`, `favoriteHouse` |
+| **Anonymous** | Todos los del catálogo v1.2 (con `platform` adjunta) | `lifecycleStage: 'anonymous'` |
+| **Known** | Todos los del catálogo v1.2 (con `platform` adjunta) | `lifecycleStage: 'known'`, `wizardName`, `favoriteHouse` |
 
 > **Nota:** `preferredTheme` está planificado en [ADR-0007](../adr/0007-event-taxonomy.md)
 > pero **no implementado** — `theme-toggle.tsx` solo persiste en `localStorage`
 > (key `wizard-hub:theme`) sin llamar `identifyUserProperties(...)`. Pendiente
 > como seguimiento.
 
-## Catálogo v1.1 referenciado
+## Catálogo v1.2 referenciado
+
+### v1 + v1.1 (Houses + Fanclub)
 
 | Evento | Cuándo | Props específicas |
 |---|---|---|
@@ -65,9 +67,18 @@ sequenceDiagram
 | `House Card Clicked` | Click en card | `houseId`, `houseName`, `source` |
 | `Explore CTA Clicked` | Click CTA explorar | `location` |
 | `Back To Houses Clicked` | Click "volver" | `fromHouseId` |
-| `External Link Clicked` | Click link externo | `target`, `location` |
 | `Theme Toggled` | Toggle dark/light | `newTheme` |
 | `Fanclub Joined` | Submit form | `favoriteHouse`, `wizardNameLength` |
+
+### v1.2 — Potions game ([ADR-0025](../adr/0025-potions-events-taxonomy.md))
+
+| Evento | Cuándo | Props específicas |
+|---|---|---|
+| `Potion Game Started` | Click "Start brewing" | `potionId`, `potionName`, `recipeSize` |
+| `Potion Round Played` | Click en una card de ingrediente | `potionId`, `round`, `cardIndex`, `correct` |
+| `Potion Game Won` | Ronda final acertada | `potionId`, `potionName`, `roundsCompleted`, `durationSec` |
+| `Potion Game Lost` | Ronda fallada | `potionId`, `potionName`, `round`, `failedCardIndex` |
+| `Potion Game Restarted` | Click "Brew again" tras fin | `previousPotionId`, `previousOutcome` |
 
 **`platform`** (`web-desktop` \| `web-mobile` \| `web-tablet`) está adjunta automáticamente a **todos** los eventos vía wrapper — ver [ADR-0019](../adr/0019-propiedad-platform-event-property.md).
 
