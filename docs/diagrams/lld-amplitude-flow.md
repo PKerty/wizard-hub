@@ -8,15 +8,15 @@
 ```mermaid
 stateDiagram-v2
     [*] --> Anonymous
-    Anonymous: Anonymous<br/>device_id autogen<br/>lifecycleStage='anonymous'
-    Known: Known<br/>user_id=email<br/>lifecycleStage='known'
+    Anonymous: Anonymous<br/>device_id autogen<br/>lifecycleStage=anonymous
+    Known: Known<br/>user_id=email<br/>lifecycleStage=known
 
-    Anonymous --> Anonymous: trackHouseViewed,<br/>trackExploreCtaClicked,<br/>... (events via device_id)
+    Anonymous --> Anonymous: trackHouseViewed,<br/>trackExploreCtaClicked,<br/>...events via device_id
 
-    Anonymous --> Known: Submit form "Únete al fanclub"<br/>setUserId(email)<br/>identify({lifecycleStage:'known',<br/>  wizardName, favoriteHouse})<br/>trackFanclubJoined<br/>saveWizardName(localStorage)
+    Anonymous --> Known: Submit form Únete al fanclub<br/>setUserId email<br/>identify lifecycleStage=known,<br/>wizardName, favoriteHouse<br/>trackFanclubJoined<br/>saveWizardName localStorage
 
     Known --> Known: navigate,<br/>track events as user_id
-    Known --> Anonymous: Sign Out<br/>reset()<br/>identify({lifecycleStage:'anonymous'})<br/>clearWizardName(localStorage)
+    Known --> Anonymous: Sign Out<br/>reset<br/>identify lifecycleStage=anonymous<br/>clearWizardName localStorage
 ```
 
 ## Sequence — Join flow
@@ -24,23 +24,23 @@ stateDiagram-v2
 ```mermaid
 sequenceDiagram
     actor U as Anonymous visitor
-    participant F as JoinForm<br/>(client component)
+    participant F as JoinForm<br/>client component
     participant W as analytics wrapper
-    participant L as lib/user<br/>(localStorage)
+    participant L as lib/user<br/>localStorage
     participant AM as Amplitude
 
-    U->>F: llena email + wizardName + favoriteHouse
+    U->>F: llena email, wizardName, favoriteHouse
     U->>F: submit
-    F->>F: validate (no PII en events)
-    F->>W: identifyFanclubMember({<br/>  email, wizardName, favoriteHouse })
-    W->>AM: setUserId(email)
-    W->>AM: identify({<br/>  lifecycleStage: 'known',<br/>  wizardName, favoriteHouse })
-    F->>W: trackFanclubJoined({<br/>  favoriteHouse,<br/>  wizardNameLength })
-    W->>W: adjunta platform (ADR-0019)
-    W->>AM: track('Fanclub Joined',<br/>  props + platform)
-    F->>L: saveWizardName(wizardName)
-    F->>U: router.push('/')
-    Note over U,L: WizardGreeting cambia<br/>'wanderer' → wizardName
+    F->>F: validate sin PII en events
+    F->>W: identifyFanclubMember<br/>props: email, wizardName, favoriteHouse
+    W->>AM: setUserId email
+    W->>AM: identify<br/>props: lifecycleStage=known,<br/>wizardName, favoriteHouse
+    F->>W: trackFanclubJoined<br/>props: favoriteHouse, wizardNameLength
+    W->>W: adjunta platform ADR-0019
+    W->>AM: track Fanclub Joined<br/>con platform adjunta
+    F->>L: saveWizardName wizardName
+    F->>U: router.push /
+    Note over U,L: WizardGreeting cambia<br/>wanderer → wizardName
 ```
 
 ## Eventos y propiedades por estado

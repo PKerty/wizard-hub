@@ -34,12 +34,12 @@ flowchart LR
     CDN --> NEXT
     NEXT --> UI
     UI --> MOD
-    NEXT -.->|ISR revalidate<br/>86400s| API
-    MOD -.->|fetch /Houses, /Houses/:id| API
+    NEXT -.->|"ISR revalidate 86400s"| API
+    MOD -.->|"fetch /Houses and /Houses/:id"| API
     UI --> ANA
-    K -->|form submit<br/>setUserId| ANA
-    ANA -->|track events<br/>+ platform (ADR-0019)| AMP
-    ANA -.->|setUserId / identify<br/>on fanclub join| AMP
+    K -->|"form submit setUserId"| ANA
+    ANA -->|"track events + platform ADR-0019"| AMP
+    ANA -.->|"setUserId identify on fanclub join"| AMP
     UI --> USER
     USER -->|wizardName| UI
 ```

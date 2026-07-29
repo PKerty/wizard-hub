@@ -9,38 +9,38 @@
 sequenceDiagram
     actor U as Visitor
     participant B as Browser
-    participant E as Vercel Edge<br/>(CDN + ISR)
+    participant E as Vercel Edge<br/>CDN + ISR
     participant N as Next.js App Router
     participant UC as GetHouseByIdUseCase
-    participant R as wizardWorldHousesRepository<br/>(adapter)
+    participant R as wizardWorldHousesRepository<br/>adapter
     participant A as Wizard World API
     participant AM as Amplitude wrapper<br/>lib/analytics
 
     Note over U,R: Click en HouseCard en /houses
-    U->>B: click "Houses" → /houses/:id?source=list
+    U->>B: click Houses → /houses/:id con source=list
     B->>E: GET /houses/:id
 
     alt ISR cache hit (build o reciente)
-        E-->>B: HTML prerendered (cached)
+        E-->>B: HTML prerendered cached
     else cache miss
         E->>N: render on-demand
-        N->>UC: getHouseById(id)
-        UC->>R: repo.findById(id)
-        R->>R: safeFetch() — try/catch<br/>(fallback null si API cae)
+        N->>UC: getHouseById id
+        UC->>R: repo.findById id
+        R->>R: safeFetch try/catch<br/>fallback null si API cae
         R->>A: GET /Houses/:id
         A-->>R: 200 JSON
-        R->>R: mapResponseToEntity()<br/>(traits → traitNames,<br/>heads → headNames)
-        R-->>UC: House (domain)
+        R->>R: mapResponseToEntity<br/>traits → traitNames<br/>heads → headNames
+        R-->>UC: House como domain
         UC-->>N: House
-        N-->>E: HTML prerendered<br/>(revalidate: 86400)
+        N-->>E: HTML prerendered<br/>revalidate 86400s
         E-->>B: HTML prerendered
     end
 
     Note over B: Hydratación
     B->>B: mount HouseViewedTracker
-    B->>AM: trackHouseViewed({<br/>  houseId, houseName,<br/>  houseFounder, source: 'list'<br/>})
-    AM->>AM: computePlatform()<br/>(UA → web-mobile \| web-tablet \| web-desktop)
-    AM->>AM: track('House Viewed', props + { platform })
+    B->>AM: trackHouseViewed<br/>props: houseId, houseName,<br/>houseFounder, source=list
+    AM->>AM: computePlatform<br/>UA → web-mobile, web-tablet o web-desktop
+    AM->>AM: track House Viewed con platform adjunta
     AM-->>AM: POST event to Amplitude
 ```
 
