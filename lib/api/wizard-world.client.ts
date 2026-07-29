@@ -44,3 +44,35 @@ export async function wizardWorldFetch<T>(
 
   return res.json() as Promise<T>;
 }
+
+/**
+ * Resilient wrapper over `wizardWorldFetch` (ADR-0026).
+ * On any error (API error or network error) it logs a warning tagged with
+ * `context` and returns `fallback` instead of throwing. Used by ISR-backed
+ * adapters so an upstream outage degrades to an empty state rather than a
+ * failed deploy.
+ */
+type SafeFetchOptions<T> = FetchOptions & {
+  fallback: T;
+  /** Log label, e.g. "houses/findAll". */
+  context: string;
+};
+
+export async function wizardWorldFetchSafe<T>(
+  path: string,
+  options: SafeFetchOptions<T>,
+): Promise<T> {
+  try {
+    return await wizardWorldFetch<T>(path, {
+      revalidate: options.revalidate,
+      tags: options.tags,
+    });
+  } catch (err) {
+    if (err instanceof WizardWorldApiError) {
+      console.warn(`[${options.context}] API error: ${err.status} ${err.message}`);
+    } else {
+      console.warn(`[${options.context}] network error:`, err);
+    }
+    return options.fallback;
+  }
+}

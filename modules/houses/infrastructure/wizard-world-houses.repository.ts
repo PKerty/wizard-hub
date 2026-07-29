@@ -1,4 +1,4 @@
-import { wizardWorldFetch, WizardWorldApiError } from "@/lib/api/wizard-world.client";
+import { wizardWorldFetchSafe } from "@/lib/api/wizard-world.client";
 import type { HouseResponse } from "@/types/wizard-world";
 import type { House } from "../domain/house";
 import type { HousesRepository } from "../domain/house-repository.port";
@@ -23,55 +23,28 @@ function mapResponseToEntity(r: HouseResponse): House {
 }
 
 /**
- * Wraps fetch in try/catch and returns `[]` / `null` on failure.
- *
- * Rationale: this repository backs ISR pages. If the upstream API is down at
- * build/revalidate time, we want the page to render with an empty state
- * (already handled in the UI) rather than fail the deploy. The error is still
- * logged so it shows up in runtime logs / CI output.
+ * Concrete adapter implementing the HousesRepository port.
+ * Fetching is resilient (ADR-0026 `wizardWorldFetchSafe`): an upstream outage
+ * degrades to an empty state (handled in the UI) rather than failing the build.
  */
-async function safeFetch<T>(
-  fetchFn: () => Promise<T>,
-  fallback: T,
-  context: string,
-): Promise<T> {
-  try {
-    return await fetchFn();
-  } catch (err) {
-    if (err instanceof WizardWorldApiError) {
-      console.warn(`[houses] API error during ${context}: ${err.status} ${err.message}`);
-    } else {
-      console.warn(`[houses] network error during ${context}:`, err);
-    }
-    return fallback;
-  }
-}
-
-/** Concrete adapter implementing the HousesRepository port. */
 export const wizardWorldHousesRepository: HousesRepository = {
   async findAll() {
-    const raw = await safeFetch(
-      () =>
-        wizardWorldFetch<HouseResponse[]>("/Houses", {
-          revalidate: HOUSES_REVALIDATE_SECONDS,
-          tags: [HOUSES_TAG],
-        }),
-      [] as HouseResponse[],
-      "findAll",
-    );
+    const raw = await wizardWorldFetchSafe<HouseResponse[]>("/Houses", {
+      fallback: [],
+      context: "houses/findAll",
+      revalidate: HOUSES_REVALIDATE_SECONDS,
+      tags: [HOUSES_TAG],
+    });
     return raw.map(mapResponseToEntity);
   },
 
   async findById(id: string) {
-    const raw = await safeFetch(
-      () =>
-        wizardWorldFetch<HouseResponse>(`/Houses/${id}`, {
-          revalidate: HOUSES_REVALIDATE_SECONDS,
-          tags: [HOUSES_TAG],
-        }),
-      null as HouseResponse | null,
-      `findById(${id})`,
-    );
+    const raw = await wizardWorldFetchSafe<HouseResponse | null>(`/Houses/${id}`, {
+      fallback: null,
+      context: `houses/findById(${id})`,
+      revalidate: HOUSES_REVALIDATE_SECONDS,
+      tags: [HOUSES_TAG],
+    });
     return raw ? mapResponseToEntity(raw) : null;
   },
 };
