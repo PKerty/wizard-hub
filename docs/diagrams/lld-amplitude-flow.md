@@ -5,18 +5,15 @@
 
 ## State diagram
 
+> Vista conceptual. La tabla de abajo lista los detalles técnicos (device_id, user properties, catálogo de eventos) y el sequence diagram muestra el flujo completo del submit.
+
 ```mermaid
 stateDiagram-v2
     [*] --> Anonymous
-    Anonymous: Anonymous<br/>device_id autogen<br/>lifecycleStage=anonymous
-    Known: Known<br/>user_id=email<br/>lifecycleStage=known
-
-    Anonymous --> Anonymous: trackHouseViewed,<br/>trackExploreCtaClicked,<br/>...events via device_id
-
-    Anonymous --> Known: Submit form Únete al fanclub<br/>setUserId email<br/>identify lifecycleStage=known,<br/>wizardName, favoriteHouse<br/>trackFanclubJoined<br/>saveWizardName localStorage
-
-    Known --> Known: navigate,<br/>track events as user_id
-    Known --> Anonymous: Sign Out<br/>reset<br/>identify lifecycleStage=anonymous<br/>clearWizardName localStorage
+    Anonymous --> Known: Submit form Únete
+    Known --> Anonymous: Sign Out
+    Anonymous --> Anonymous: track events
+    Known --> Known: track events
 ```
 
 ## Sequence — Join flow
