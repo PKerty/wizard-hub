@@ -1,4 +1,4 @@
-import { wizardWorldFetch, WizardWorldApiError } from "@/lib/api/wizard-world.client";
+import { wizardWorldFetchSafe } from "@/lib/api/wizard-world.client";
 import type {
   ElixirResponse,
   IngredientResponse,
@@ -10,7 +10,7 @@ import type { PotionsRepository } from "../domain/potions-repository.port";
 /** ISR window for potions data (ADR-0005 / ADR-0022): 24h. */
 const POTIONS_REVALIDATE_SECONDS = 86400;
 const POTIONS_TAG = "potions";
-/** Minimum recipe size to be playable (ADR-0024 §6): avoids trivial 1-round games. */
+/** Minimum recipe size to be playable (ADR-0024 section 6): avoids trivial 1-round games. */
 const MIN_PLAYABLE_INGREDIENTS = 2;
 
 function mapElixirToPotion(r: ElixirResponse): Potion {
@@ -29,66 +29,40 @@ function mapIngredient(i: IngredientResponse): Ingredient {
 }
 
 /**
- * Same defensive wrapper as the Houses adapter: ISR pages must render an empty
- * state instead of failing a deploy when the upstream API is asleep.
+ * Concrete adapter implementing the PotionsRepository port (ADR-0022).
+ * Fetching is resilient (ADR-0026 `wizardWorldFetchSafe`): an upstream outage
+ * degrades to an empty state rather than failing the build.
  */
-async function safeFetch<T>(
-  fetchFn: () => Promise<T>,
-  fallback: T,
-  context: string,
-): Promise<T> {
-  try {
-    return await fetchFn();
-  } catch (err) {
-    if (err instanceof WizardWorldApiError) {
-      console.warn(`[potions] API error during ${context}: ${err.status} ${err.message}`);
-    } else {
-      console.warn(`[potions] network error during ${context}:`, err);
-    }
-    return fallback;
-  }
-}
-
-/** Concrete adapter implementing the PotionsRepository port (ADR-0022). */
 export const wizardWorldPotionsRepository: PotionsRepository = {
   async findAll() {
-    const raw = await safeFetch(
-      () =>
-        wizardWorldFetch<ElixirResponse[]>("/Elixirs", {
-          revalidate: POTIONS_REVALIDATE_SECONDS,
-          tags: [POTIONS_TAG],
-        }),
-      [] as ElixirResponse[],
-      "findAll",
-    );
+    const raw = await wizardWorldFetchSafe<ElixirResponse[]>("/Elixirs", {
+      fallback: [],
+      context: "potions/findAll",
+      revalidate: POTIONS_REVALIDATE_SECONDS,
+      tags: [POTIONS_TAG],
+    });
     return raw.map(mapElixirToPotion);
   },
 
   async findPlayable() {
-    const raw = await safeFetch(
-      () =>
-        wizardWorldFetch<ElixirResponse[]>("/Elixirs", {
-          revalidate: POTIONS_REVALIDATE_SECONDS,
-          tags: [POTIONS_TAG],
-        }),
-      [] as ElixirResponse[],
-      "findPlayable",
-    );
+    const raw = await wizardWorldFetchSafe<ElixirResponse[]>("/Elixirs", {
+      fallback: [],
+      context: "potions/findPlayable",
+      revalidate: POTIONS_REVALIDATE_SECONDS,
+      tags: [POTIONS_TAG],
+    });
     return raw
       .filter((e) => e.ingredients.length >= MIN_PLAYABLE_INGREDIENTS)
       .map(mapElixirToPotion);
   },
 
   async findAllIngredients() {
-    const raw = await safeFetch(
-      () =>
-        wizardWorldFetch<IngredientResponse[]>("/Ingredients", {
-          revalidate: POTIONS_REVALIDATE_SECONDS,
-          tags: [POTIONS_TAG],
-        }),
-      [] as IngredientResponse[],
-      "findAllIngredients",
-    );
+    const raw = await wizardWorldFetchSafe<IngredientResponse[]>("/Ingredients", {
+      fallback: [],
+      context: "potions/findAllIngredients",
+      revalidate: POTIONS_REVALIDATE_SECONDS,
+      tags: [POTIONS_TAG],
+    });
     return raw.map(mapIngredient);
   },
 };
