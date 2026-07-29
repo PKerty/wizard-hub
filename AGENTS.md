@@ -88,6 +88,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0021 | Nav hamburguesa en mobile (reemplaza parte de ADR-0020 §2) | Aceptado |
 | 0022 | Nuevo módulo `potions` (bounded context hexagonal) | Aceptado |
 | 0023 | Diseño del Potions game — reglas, scoring, fin | Aceptado |
+| 0024 | Fetching y generación de distractors — Potions game | Aceptado |
 ---
 
 ## 5. Decisiones pendientes (a resolver a continuación)
