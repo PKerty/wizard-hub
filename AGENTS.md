@@ -87,6 +87,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0020 | Estrategia responsive — mobile-first con Tailwind defaults | Aceptado |
 | 0021 | Nav hamburguesa en mobile (reemplaza parte de ADR-0020 §2) | Aceptado |
 | 0022 | Nuevo módulo `potions` (bounded context hexagonal) | Aceptado |
+| 0023 | Diseño del Potions game — reglas, scoring, fin | Aceptado |
 ---
 
 ## 5. Decisiones pendientes (a resolver a continuación)
