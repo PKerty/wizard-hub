@@ -3,11 +3,14 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
-import { useSyncExternalStore } from "react";
 import { trackExploreCtaClicked, resetUserIdentity } from "@/lib/analytics";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MobileNav } from "./mobile-nav";
-import { WIZARD_NAME_STORAGE_KEY, readWizardName, clearWizardName } from "@/lib/user";
+import {
+  WIZARD_NAME_STORAGE_KEY,
+  clearWizardName,
+} from "@/lib/user";
+import { useWizardName } from "@/lib/user/use-wizard-name";
 
 interface NavLinkDef {
   href: Route;
@@ -27,19 +30,6 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function subscribe(callback: () => void): () => void {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-}
-
-function getWizardNameSnapshot(): string | null {
-  return readWizardName();
-}
-
-function getWizardNameServerSnapshot(): string | null {
-  return null;
-}
-
 /**
  * Top navigation bar. Sticky. Brand on the left, links + ThemeToggle on the right.
  *
@@ -52,11 +42,7 @@ function getWizardNameServerSnapshot(): string | null {
  */
 export function Nav() {
   const pathname = usePathname() ?? "/";
-  const wizardName = useSyncExternalStore(
-    subscribe,
-    getWizardNameSnapshot,
-    getWizardNameServerSnapshot,
-  );
+  const wizardName = useWizardName();
   const isKnown = wizardName !== null;
 
   const handleSignOut = () => {

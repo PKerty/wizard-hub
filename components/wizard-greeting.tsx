@@ -1,21 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { WIZARD_NAME_STORAGE_KEY, readWizardName } from "@/lib/user";
-
-function subscribe(callback: () => void): () => void {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-}
-
-function getWizardNameSnapshot(): string | null {
-  return readWizardName();
-}
-
-function getWizardNameServerSnapshot(): string | null {
-  // SSR-safe: always null so server renders "wanderer" and client hydrates matching.
-  return null;
-}
+import { useWizardName } from "@/lib/user/use-wizard-name";
 
 /**
  * Renders the wizardName if the user is known, "wanderer" otherwise.
@@ -26,11 +11,7 @@ function getWizardNameServerSnapshot(): string | null {
  * of layout, only text content swaps which is acceptable).
  */
 export function WizardGreeting() {
-  const wizardName = useSyncExternalStore(
-    subscribe,
-    getWizardNameSnapshot,
-    getWizardNameServerSnapshot,
-  );
+  const wizardName = useWizardName();
 
   return (
     <span className="shimmer shimmer-text">
@@ -40,4 +21,4 @@ export function WizardGreeting() {
 }
 
 // Re-export the storage key for consumers that need to dispatch 'storage' events manually.
-export { WIZARD_NAME_STORAGE_KEY };
+export { WIZARD_NAME_STORAGE_KEY } from "@/lib/user";
