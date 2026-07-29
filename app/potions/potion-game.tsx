@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useReducer, useRef, useSyncExternalStore } from "react";
 import type { Ingredient, Potion } from "@/modules/potions";
 import {
   createGameSession,
@@ -35,8 +35,11 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
 
   const { status, session, roundIndex, cauldronIds } = state;
 
+  const settledRef = useRef<"won" | "lost" | null>(null);
+
   const beginGame = useCallback(() => {
     const potion = pickRandom(potions);
+    settledRef.current = null;
     dispatch({
       type: "START",
       session: createGameSession(potion, ingredients),
@@ -61,6 +64,12 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
 
   useEffect(() => {
     if (!session) return;
+    if (status !== "won" && status !== "lost") return;
+    // StrictMode-safe: the dev double-effect would otherwise double-fire the
+    // terminal event + saveHighScore. Guard per session outcome.
+    if (settledRef.current === status) return;
+    settledRef.current = status;
+
     if (status === "won") {
       saveHighScore(cauldronIds.length);
       trackPotionGameWon({
@@ -69,7 +78,7 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
         roundsCompleted: cauldronIds.length,
         durationSec: Math.round((Date.now() - state.startedAt) / 1000),
       });
-    } else if (status === "lost") {
+    } else {
       saveHighScore(cauldronIds.length);
       trackPotionGameLost({
         potionId: session.potion.id,
