@@ -154,6 +154,24 @@ body::after {
     );
 }
 
+/* Light theme — warm torchlight is near-invisible on parchment, so the glow
+   becomes an iridescent gleam (teal → magenta core, violet halo) using the
+   muted light-mode iri tokens. Keeps the "light follows pointer" readable. */
+:root[data-theme="light"] body::after {
+  background:
+    radial-gradient(
+      circle 300px at var(--torch-x, 50%) var(--torch-y, 50%),
+      rgba(79, 168, 154, 0.18) 0%,
+      rgba(168, 95, 135, 0.13) 42%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle 480px at var(--torch-x, 50%) var(--torch-y, 50%),
+      rgba(124, 102, 184, 0.1) 0%,
+      transparent 72%
+    );
+}
+
 @media (prefers-reduced-motion: reduce) {
   body::after {
     display: none;
