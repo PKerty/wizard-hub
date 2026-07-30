@@ -71,6 +71,9 @@
   --duration-base: 300ms;
   --duration-slow: 500ms;
   --duration-ritual: 800ms;
+
+  /* Glow (design-system §4.1 — sigil-violet halo, used by the Crystal Orb) */
+  --glow-sigil: 0 0 16px rgba(167, 139, 250, 0.35);
 }
 
 /* Light mode — "Ministerio diurno" */
@@ -87,6 +90,9 @@
   --color-iri-cyan: #4fa89a;
   --color-iri-magenta: #a85f87;
   --color-iri-violet: #7c66b8;
+
+  /* Light-mode glow uses the light sigil-violet (#6b4fa8). */
+  --glow-sigil: 0 0 16px rgba(107, 79, 168, 0.3);
 }
 
 /* Base */
@@ -382,6 +388,46 @@ body::after {
   border-color: var(--color-sigil-violet);
   background-color: color-mix(in srgb, var(--color-bg-fog) 45%, transparent);
   box-shadow: 0 0 0 1px var(--color-sigil-violet), 0 0 18px rgba(167, 139, 250, 0.18);
+}
+
+/* Crystal Orb loader — signature loading affordance (design-system §4.1).
+   Nácar-radial surface with a drifting iridescent gradient + sigil glow.
+   80px mobile → 120px desktop per spec. */
+.crystal-orb {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--color-iri-cyan) 0%,
+    var(--color-iri-magenta) 40%,
+    var(--color-iri-violet) 70%,
+    var(--color-bg-void) 100%
+  );
+  background-size: 130% 130%;
+  box-shadow: var(--glow-sigil), inset 0 0 32px rgba(0, 0, 0, 0.5);
+  animation: orb-drift var(--duration-ritual) var(--ease-sigil) infinite alternate;
+}
+@media (min-width: 768px) {
+  .crystal-orb {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+}
+@keyframes orb-drift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 30% 20%;
+  }
+}
+/* Explicit static orb under reduced motion (the global rule at the bottom of
+   this file also neutralises the animation; kept for spec clarity). */
+@media (prefers-reduced-motion: reduce) {
+  .crystal-orb {
+    animation: none;
+  }
 }
 
 /* Selection */
