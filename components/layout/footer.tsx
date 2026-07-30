@@ -13,6 +13,7 @@ interface FooterLinkDef {
 const LINKS = [
   { href: "/", label: "Home", tracksAsExploreCta: false },
   { href: "/houses", label: "Houses", tracksAsExploreCta: true },
+  { href: "/wizards", label: "Wizards", tracksAsExploreCta: false },
   { href: "/join", label: "Join", tracksAsExploreCta: false },
 ] as const satisfies readonly FooterLinkDef[];
 

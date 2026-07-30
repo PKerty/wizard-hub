@@ -39,12 +39,13 @@ describe("Nav", () => {
     expect(screen.getByText("wizard-hub")).toBeInTheDocument();
   });
 
-  it("renders links for Home, Houses and Potions (desktop inline + mobile trigger)", () => {
+  it("renders links for Home, Houses, Potions and Wizards (desktop inline + mobile trigger)", () => {
     render(<Nav />);
     // Both inline and inside MobileNav trigger context render the links.
     expect(screen.getAllByRole("link", { name: "Home" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Houses" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Potions" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Wizards" }).length).toBeGreaterThan(0);
   });
 
   it("marks the current route's link as active in the desktop nav", () => {
