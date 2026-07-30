@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { TorchlightCursor } from "@/components/effects/torchlight-cursor";
+import { SparkleTrail } from "@/components/effects/sparkle-trail";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({
         </Script>
         <Providers>
           <TorchlightCursor />
+          <SparkleTrail />
           <Nav />
           {children}
           <Footer />
