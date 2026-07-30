@@ -23,6 +23,7 @@ const LINKS = [
   { href: "/", label: "Home", tracksAsExploreCta: false },
   { href: "/houses", label: "Houses", tracksAsExploreCta: true },
   { href: "/potions", label: "Potions", tracksAsExploreCta: false },
+  { href: "/wizards", label: "Wizards", tracksAsExploreCta: false },
 ] as const satisfies readonly NavLinkDef[];
 
 function isActive(pathname: string, href: string): boolean {
