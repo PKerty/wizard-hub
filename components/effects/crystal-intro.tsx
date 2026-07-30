@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { CrystalOrb } from "./crystal-orb";
 
 export const INTRO_STORAGE_KEY = "wizard-hub:intro-seen";
@@ -18,6 +19,10 @@ type Phase = "hidden" | "visible" | "leaving";
  * orb centered, then fades to reveal the page. Shown **once per browser
  * session** (sessionStorage) so repeat navigations aren't blocked, and skipped
  * entirely under prefers-reduced-motion.
+ *
+ * The veil fade is Motion-driven (spring-eased, ADR-0030); the orb's own
+ * materialisation is handled by `<CrystalOrb/>`. The phase/timer machine stays
+ * (lint-clean, SSR-safe) and drives the Motion `animate` target.
  */
 export function CrystalIntro() {
   const [phase, setPhase] = useState<Phase>("hidden");
@@ -45,15 +50,15 @@ export function CrystalIntro() {
   if (phase === "hidden") return null;
 
   return (
-    <div
+    <motion.div
       className="crystal-intro"
-      style={{
-        opacity: phase === "leaving" ? 0 : 1,
-        transition: `opacity ${FADE_MS}ms var(--ease-sigil)`,
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: phase === "leaving" ? 0 : 1 }}
+      transition={{ duration: FADE_MS / 1000, ease: [0.16, 1, 0.3, 1] }}
       aria-hidden="true"
     >
       <CrystalOrb />
-    </div>
+    </motion.div>
   );
 }
+
