@@ -391,22 +391,23 @@ body::after {
 }
 
 /* Crystal Orb loader — signature loading affordance (design-system §4.1).
-   Nácar-radial surface with a drifting iridescent gradient + sigil glow.
-   80px mobile → 120px desktop per spec. */
+   A glass sphere holding swirling iridescent energy: a conic gradient of the
+   three nácar stops rotates via @property so the colors *flow* inside the orb
+   rather than sitting in a fixed position. 80px mobile → 120px desktop. */
+@property --orb-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
 .crystal-orb {
+  position: relative;
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 30%,
-    var(--color-iri-cyan) 0%,
-    var(--color-iri-magenta) 40%,
-    var(--color-iri-violet) 70%,
-    var(--color-bg-void) 100%
-  );
-  background-size: 130% 130%;
-  box-shadow: var(--glow-sigil), inset 0 0 32px rgba(0, 0, 0, 0.5);
-  animation: orb-drift var(--duration-ritual) var(--ease-sigil) infinite alternate;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--color-bg-void);
+  box-shadow: var(--glow-sigil), inset 0 0 28px rgba(0, 0, 0, 0.55);
 }
 @media (min-width: 768px) {
   .crystal-orb {
@@ -414,20 +415,68 @@ body::after {
     height: 7.5rem;
   }
 }
-@keyframes orb-drift {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 30% 20%;
+/* Swirling energy core — conic gradient rotated through a registered angle
+   property (smooth interpolation), softened with a blur so it reads as nebular
+   energy rather than a color wheel. */
+.crystal-orb::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: conic-gradient(
+    from var(--orb-angle),
+    var(--color-iri-cyan),
+    var(--color-iri-violet),
+    var(--color-iri-magenta),
+    var(--color-iri-violet),
+    var(--color-iri-cyan)
+  );
+  filter: blur(7px);
+  animation: orb-swirl calc(var(--duration-ritual) * 3) linear infinite;
+}
+@keyframes orb-swirl {
+  to {
+    --orb-angle: 360deg;
   }
 }
-/* Explicit static orb under reduced motion (the global rule at the bottom of
-   this file also neutralises the animation; kept for spec clarity). */
+/* Glass specular highlight — sells the crystal sphere volume. */
+.crystal-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 26%,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0) 40%
+  );
+  pointer-events: none;
+}
+/* Static orb under reduced motion (the global rule at the bottom of this file
+   also neutralises the animation; kept for spec clarity). */
 @media (prefers-reduced-motion: reduce) {
-  .crystal-orb {
+  .crystal-orb::before {
     animation: none;
   }
+}
+
+/* Crystal Intro — first-load splash on the home page so the orb gets a proper
+   moment to be enjoyed (route loaders flash too briefly). Covers the viewport
+   above nav (z-60), holds the orb centered, then fades out. Shown once per
+   browser session; skipped entirely under prefers-reduced-motion. */
+.crystal-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-void);
+  background-image: radial-gradient(
+    ellipse at top,
+    var(--color-bg-mist) 0%,
+    var(--color-bg-void) 70%
+  );
+  pointer-events: none;
 }
 
 /* Selection */
