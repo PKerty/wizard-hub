@@ -56,3 +56,21 @@ export interface IngredientResponse {
   id: string;
   name: string;
 }
+
+/* ==================== Wizards (ADR-0028 — search-v2-fuzzy) ==================== */
+/* Raw shapes of the /Wizards resource. Infrastructure only; the adapter maps
+   these into the domain Wizard entity. Both `firstName` and `lastName` are
+   nullable — the API does not guarantee either is present (today 3/17 wizards
+   have a null firstName). */
+
+export interface WizardElixirResponse {
+  id: string;
+  name: string;
+}
+
+export interface WizardResponse {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  elixirs: WizardElixirResponse[];
+}
