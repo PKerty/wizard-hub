@@ -66,6 +66,20 @@ export function trackPotionGameRestarted(props: EventCatalog["Potion Game Restar
   sendEvent("Potion Game Restarted", props);
 }
 
+/* ==================== Wizards search (ADR-0028 — taxonomy v1.3) ==================== */
+
+export function trackWizardSearchSubmitted(props: EventCatalog["Wizard Search Submitted"]): void {
+  sendEvent("Wizard Search Submitted", props);
+}
+
+export function trackWizardResultClicked(props: EventCatalog["Wizard Result Clicked"]): void {
+  sendEvent("Wizard Result Clicked", props);
+}
+
+export function trackListScrollDepth(props: EventCatalog["List Scroll Depth"]): void {
+  sendEvent("List Scroll Depth", props);
+}
+
 /* ==================== Identity (ADR-0008) ==================== */
 
 export interface FanclubMember {

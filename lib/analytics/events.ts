@@ -82,6 +82,35 @@ export interface PotionGameRestartedProperties {
   previousOutcome: "won" | "lost";
 }
 
+/* ==================== v1.3 events — Wizards search (ADR-0028) ==================== */
+
+export interface WizardSearchSubmittedProperties {
+  /** Length of the query, NOT the text (privacy — ADR-0028 §7). */
+  queryLength: number;
+  /** Number of fuzzy results returned for this query. */
+  resultCount: number;
+  /** Fuse.js threshold in effect (the value telemetry will tune). */
+  fuzzyThreshold: number;
+}
+
+export interface WizardResultClickedProperties {
+  wizardId: string;
+  wizardName: string;
+  /** 0-indexed position of the clicked result. */
+  resultRank: number;
+  /** Length of the query that surfaced the result, NOT the text (privacy). */
+  queryLength: number;
+}
+
+export interface ListScrollDepthProperties {
+  /** Which list is being scrolled, e.g. "wizards_search_results". */
+  listName: string;
+  /** Max scroll percent reached so far (edge-triggered at 25/50/75/100). */
+  maxScrollPercent: number;
+  /** Seconds elapsed on the page when this threshold was crossed. */
+  timeOnPageSec: number;
+}
+
 /* ==================== Event name + property map ==================== */
 
 export interface EventCatalog {
@@ -96,6 +125,9 @@ export interface EventCatalog {
   "Potion Game Won": PotionGameWonProperties;
   "Potion Game Lost": PotionGameLostProperties;
   "Potion Game Restarted": PotionGameRestartedProperties;
+  "Wizard Search Submitted": WizardSearchSubmittedProperties;
+  "Wizard Result Clicked": WizardResultClickedProperties;
+  "List Scroll Depth": ListScrollDepthProperties;
 }
 
 export type EventName = keyof EventCatalog;
