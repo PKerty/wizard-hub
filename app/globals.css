@@ -107,6 +107,70 @@ body {
   min-height: 100vh;
 }
 
+/* Cursor affordances — make interactive elements read as clickable (design-system §4.2/4.3).
+   In @layer base so explicit `cursor-*` utilities still win where needed. */
+@layer base {
+  a[href],
+  button:not(:disabled),
+  [role="button"],
+  summary,
+  label[for],
+  input[type="checkbox"],
+  input[type="radio"],
+  [data-clickable] {
+    cursor: pointer;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(
+      [type="hidden"]
+    ),
+  textarea,
+  select {
+    cursor: text;
+  }
+}
+
+/* Pointer torchlight — Excalibur "torch carried through mist" (ADR-0029 prototype).
+   Painted by body::after; position driven by --torch-x/--torch-y (set by
+   TorchlightCursor). One effect node, pointer-events:none, above page content
+   but below sticky nav (z-40) and drawers. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle 280px at var(--torch-x, 50%) var(--torch-y, 50%),
+      rgba(212, 162, 75, 0.12) 0%,
+      rgba(212, 162, 75, 0.06) 30%,
+      transparent 65%
+    ),
+    radial-gradient(
+      circle 460px at var(--torch-x, 50%) var(--torch-y, 50%),
+      rgba(127, 217, 201, 0.035) 0%,
+      rgba(217, 127, 169, 0.03) 45%,
+      transparent 70%
+    );
+}
+
+/* Light theme — the warm torchlight radial is near-invisible on parchment, so
+   it's hidden here and replaced by a gold sparkle trail (SparkleTrail canvas). */
+:root[data-theme="light"] body::after {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    display: none;
+  }
+}
+@media (pointer: coarse) {
+  body::after {
+    display: none;
+  }
+}
+
 /* Mist gradient utility (when solid bg needed, always paired with subtle gradient) */
 .bg-mist-gradient {
   background-image: radial-gradient(
