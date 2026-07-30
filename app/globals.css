@@ -265,6 +265,75 @@ body::after {
   }
 }
 
+/* House-card "armor gleam" — design-system §3.1 ("Borders of House Cards on
+   hover"). Iridescent conic border (rotating) + diagonal sheen sweep on hover.
+   Iridescence stays OFF at rest (respects §1 principle 2: iridescence as
+   firma, not décor). */
+@property --gleam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.armor-gleam::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--gleam-angle),
+    var(--color-iri-cyan),
+    var(--color-iri-magenta),
+    var(--color-iri-violet),
+    var(--color-iri-cyan)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-arcane);
+  pointer-events: none;
+  animation: gleam-rotate 4s linear infinite;
+}
+.armor-gleam:hover::before {
+  opacity: 1;
+}
+@keyframes gleam-rotate {
+  to {
+    --gleam-angle: 360deg;
+  }
+}
+.armor-gleam::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(196, 205, 217, 0.18) 50%,
+    transparent 65%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+.armor-gleam:hover::after {
+  opacity: 1;
+  animation: sheen-sweep 900ms var(--ease-sigil);
+}
+@keyframes sheen-sweep {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
 /* Selection */
 ::selection {
   background-color: var(--color-torchlight);
