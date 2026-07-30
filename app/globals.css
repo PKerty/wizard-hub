@@ -479,6 +479,58 @@ body::after {
   pointer-events: none;
 }
 
+/* Cauldron surface — gentle bubbling sigil glow behind the reagent chips
+   (ADR-0030: continuous ambient = CSS, not Motion). */
+.cauldron-surface {
+  position: relative;
+}
+.cauldron-surface::before {
+  content: "";
+  position: absolute;
+  inset: -6px -6px -2px;
+  border-radius: var(--radius-card);
+  background: radial-gradient(
+    ellipse at 30% 120%,
+    rgba(129, 199, 132, 0.16),
+    rgba(129, 199, 132, 0) 70%
+  );
+  animation: cauldron-bubble var(--duration-ritual) var(--ease-arcane) infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes cauldron-bubble {
+  0% {
+    opacity: 0.5;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+/* Reagent card idle life — a faint torchlight breathing halo (box-shadow only,
+   transform-free so it never fights Motion's transform on the card). Phase-
+   offset per card via inline animation-delay. Iridescence is reserved for the
+   reveal bursts (design-system §1.2: max 1 simultaneous iridescent element). */
+.reagent-idle {
+  box-shadow: 0 0 0 transparent;
+  animation: reagent-breathe 3.2s var(--ease-arcane) infinite alternate;
+}
+@keyframes reagent-breathe {
+  0% {
+    box-shadow: 0 0 10px rgba(212, 162, 75, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 16px rgba(212, 162, 75, 0.16);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cauldron-surface::before,
+  .reagent-idle {
+    animation: none;
+  }
+}
+
 /* Selection */
 ::selection {
   background-color: var(--color-torchlight);

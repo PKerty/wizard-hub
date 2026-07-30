@@ -335,7 +335,7 @@ Reglas:
 - ~~**Icon set:** heroicons vs custom SVG heráldico~~ → Resuelto en **ADR-0015 (custom SVG)**.
 - ~~**Ilustración:** ¿line-art tipo Marauder's Map para hero?~~ → Resuelto en **ADR-0016 (line-art scoped)**.
 - **Sound design:** fuera de scope del challenge.
-- **Motion library:** Framer Motion vs CSS-only (decidir cuando haya componentes animados complejos).
+- ~~**Motion library:** Framer Motion vs CSS-only~~ → Resuelto en **ADR-0030 (Motion, scoped a orquestación compleja; CSS sigue como default)**.
 - **A11y testing:** axe-core vs pa11y vs manual (cuando exista UI para auditar).
 
 ### 7-bis. Convenciones de iconografía e ilustración
