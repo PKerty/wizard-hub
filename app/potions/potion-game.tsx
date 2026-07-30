@@ -198,49 +198,6 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
         </span>
       </div>
 
-      {/* Cauldron — a growing recipe checklist (grocery-list style). */}
-      <div className="cauldron-surface mt-6">
-        <p className="font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight">
-          In the cauldron
-        </p>
-        <ul className="mt-3 divide-y divide-moonlight/10 overflow-hidden rounded-soft border border-moonlight/10 bg-bg-fog/30">
-          {cauldronIds.length === 0 ? (
-            <li className="px-4 py-3 font-body text-small italic text-whisper">
-              Empty — awaiting the first reagent.
-            </li>
-          ) : (
-            cauldronIds.map((id, i) => (
-              <motion.li
-                key={`${id}-${i}`}
-                layout
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ type: "spring", stiffness: 420, damping: 26 }}
-                className="flex items-center gap-3 px-4 py-2.5"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  className="shrink-0 text-success"
-                  aria-hidden="true"
-                >
-                  <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="font-mono text-mono-data text-steel/80 line-through decoration-success/40">
-                  {nameById.get(id) ?? id}
-                </span>
-              </motion.li>
-            ))
-          )}
-        </ul>
-      </div>
-
-      {/* Outcome banner lives in the centered overlay below. */}
-
       {/* Cards — staggered reveal per round via AnimatePresence (ADR-0030). */}
       <AnimatePresence mode="wait">
         {round && (
@@ -283,6 +240,51 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Cauldron — recipe feed below the cards, newest on top so the cards
+          never shift as the list grows (ADR-0023). */}
+      <div className="cauldron-surface mt-8">
+        <p className="font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight">
+          In the cauldron
+        </p>
+        <ul className="mt-3 divide-y divide-moonlight/10 overflow-hidden rounded-soft border border-moonlight/10 bg-bg-fog/30">
+          {cauldronIds.length === 0 ? (
+            <li className="px-4 py-3 font-body text-small italic text-whisper">
+              Empty — awaiting the first reagent.
+            </li>
+          ) : (
+            cauldronIds
+              .map((id, i) => ({ id, i }))
+              .reverse()
+              .map(({ id, i }) => (
+                <motion.li
+                  key={`${id}-${i}`}
+                  layout
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 26 }}
+                  className="flex items-center gap-3 px-4 py-2.5"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    className="shrink-0 text-success"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="font-mono text-mono-data text-steel/80 line-through decoration-success/40">
+                    {nameById.get(id) ?? id}
+                  </span>
+                </motion.li>
+              ))
+          )}
+        </ul>
+      </div>
 
       {/* Victory / defeat — a centered moment with the play-again CTA.
           Appears after the card reveal so both beats land (ADR-0030). */}

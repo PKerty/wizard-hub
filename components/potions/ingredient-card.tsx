@@ -91,7 +91,7 @@ export function IngredientCard({
       data-tone={tone}
       aria-disabled={disabled || undefined}
       className={
-        "relative flex w-full flex-col items-center gap-3 overflow-hidden rounded-card border p-6 outline-none " +
+        "relative flex h-full w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-card border p-6 text-center outline-none " +
         TONE_CLASS[tone] +
         (tone === "default" ? " reagent-idle" : "")
       }
@@ -121,7 +121,7 @@ export function IngredientCard({
           strokeLinejoin="round"
         />
       </svg>
-      <span className="text-center font-display text-eyebrow uppercase tracking-[0.15em] text-steel">
+      <span className="break-words px-1 font-display text-eyebrow uppercase tracking-[0.15em] text-steel">
         {name}
       </span>
 
