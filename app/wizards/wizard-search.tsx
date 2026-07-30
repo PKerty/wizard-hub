@@ -83,7 +83,7 @@ export function WizardSearch({ wizards }: { wizards: Wizard[] }) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="e.g. Weasley, Flamel…"
           aria-label="Search wizards"
-          className="w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none transition-colors duration-base ease-arcane focus:border-torchlight"
+          className="field-arcane w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none"
         />
       </form>
 
