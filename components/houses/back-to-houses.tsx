@@ -20,7 +20,7 @@ export function BackToHouses({ fromHouseId }: BackToHousesProps) {
     <Link
       href="/houses"
       onClick={handleClick}
-      className="inline-flex min-h-11 items-center gap-2 font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-torchlight"
+      className="inline-flex min-h-11 items-center gap-2 font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-all duration-base ease-arcane hover:-translate-y-px hover:text-torchlight"
     >
       ← Back to Houses
     </Link>

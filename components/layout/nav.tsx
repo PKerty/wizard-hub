@@ -115,14 +115,14 @@ export function Nav() {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-torchlight"
+                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-all duration-base ease-arcane hover:-translate-y-px hover:text-torchlight"
                 >
                   Sign Out
                 </button>
               ) : (
                 <Link
                   href="/join"
-                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-colors duration-base ease-arcane hover:text-steel"
+                  className="inline-flex min-h-11 items-center font-display text-eyebrow uppercase tracking-[0.2em] text-moonlight transition-all duration-base ease-arcane hover:-translate-y-px hover:text-steel"
                 >
                   Join
                 </Link>
