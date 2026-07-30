@@ -50,21 +50,23 @@ describe("CrystalIntro", () => {
     expect(document.querySelector(".crystal-intro")).not.toBeInTheDocument();
   });
 
-  it("fades out and marks the session seen after the hold", () => {
+  it("leaves and marks the session seen after the hold", () => {
     vi.useFakeTimers();
     render(<CrystalIntro />);
     act(() => {
       vi.advanceTimersByTime(0);
     });
-    const overlay = document.querySelector(".crystal-intro") as HTMLElement;
-    expect(overlay.style.opacity).toBe("1");
+    expect(document.querySelector(".crystal-intro")).toBeInTheDocument();
     expect(sessionStorage.getItem(INTRO_STORAGE_KEY)).toBeNull();
 
+    // HOLD reached → the veil is fading out (still mounted), not yet marked seen.
     act(() => {
       vi.advanceTimersByTime(1800);
     });
-    expect(overlay.style.opacity).toBe("0");
+    expect(document.querySelector(".crystal-intro")).toBeInTheDocument();
+    expect(sessionStorage.getItem(INTRO_STORAGE_KEY)).toBeNull();
 
+    // FADE done → unmounts + marks the session so it won't replay.
     act(() => {
       vi.advanceTimersByTime(500);
     });
