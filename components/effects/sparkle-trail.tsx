@@ -31,7 +31,7 @@ interface Spark {
   size: number;
 }
 
-const MAX_SPARKS = 70;
+const MAX_SPARKS = 45;
 
 /**
  * Gold sparkle trail ("fairy dust" / rising embers) for the LIGHT theme.
@@ -81,9 +81,9 @@ export function SparkleTrail() {
     const sctx = sprite.getContext("2d");
     if (sctx) {
       const grad = sctx.createRadialGradient(16, 16, 0, 16, 16, 16);
-      grad.addColorStop(0, "rgba(245, 220, 150, 1)");
-      grad.addColorStop(0.35, "rgba(212, 162, 75, 0.7)");
-      grad.addColorStop(1, "rgba(212, 162, 75, 0)");
+      grad.addColorStop(0, "rgba(190, 240, 245, 0.8)");
+      grad.addColorStop(0.35, "rgba(95, 200, 215, 0.45)");
+      grad.addColorStop(1, "rgba(95, 200, 215, 0)");
       sctx.fillStyle = grad;
       sctx.fillRect(0, 0, 32, 32);
     }
@@ -93,18 +93,18 @@ export function SparkleTrail() {
     let lastSpawn = 0;
 
     const spawn = (x: number, y: number) => {
-      const count = 1 + (Math.random() < 0.4 ? 1 : 0);
+      const count = 1 + (Math.random() < 0.2 ? 1 : 0);
       for (let i = 0; i < count; i++) {
         if (sparks.length >= MAX_SPARKS) sparks.shift();
-        const maxLife = 600 + Math.random() * 400;
+        const maxLife = 500 + Math.random() * 300;
         sparks.push({
           x: x + (Math.random() - 0.5) * 6,
           y: y + (Math.random() - 0.5) * 6,
-          vx: (Math.random() - 0.5) * 0.6,
-          vy: -0.2 - Math.random() * 0.5,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: -0.15 - Math.random() * 0.4,
           life: maxLife,
           maxLife,
-          size: 1 + Math.random() * 2.2,
+          size: 0.7 + Math.random() * 1.3,
         });
       }
       if (!raf) raf = window.requestAnimationFrame(loop);
@@ -124,8 +124,8 @@ export function SparkleTrail() {
         s.x += s.vx * 0.96;
         s.y += s.vy * 0.96;
         const t = s.life / s.maxLife;
-        const alpha = t * t;
-        const draw = s.size * (3 + t * 3);
+        const alpha = t * t * 0.65;
+        const draw = s.size * (2.5 + t * 2.5);
         ctx.globalAlpha = alpha;
         ctx.drawImage(sprite, s.x - draw / 2, s.y - draw / 2, draw, draw);
       }
@@ -141,7 +141,7 @@ export function SparkleTrail() {
 
     const onMove = (event: PointerEvent) => {
       const now = performance.now();
-      if (now - lastSpawn < 16) return;
+      if (now - lastSpawn < 20) return;
       lastSpawn = now;
       spawn(event.clientX, event.clientY);
     };
