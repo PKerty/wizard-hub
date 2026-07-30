@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDisplayName } from "@/modules/wizards/domain/wizard";
+import { buildDisplayName, buildElixirNames } from "@/modules/wizards/domain/wizard";
 
 describe("buildDisplayName (ADR-0028 §3 — both parts nullable)", () => {
   it("returns null when both names are null (degenerate case)", () => {
@@ -25,5 +25,28 @@ describe("buildDisplayName (ADR-0028 §3 — both parts nullable)", () => {
 
   it("trims surrounding whitespace", () => {
     expect(buildDisplayName("  Fred  ", " Weasley ")).toBe("Fred Weasley");
+  });
+});
+
+describe("buildElixirNames (detail panel — ADR-0028, display only, not indexed)", () => {
+  it("returns an empty array for no elixirs (degenerate case)", () => {
+    expect(buildElixirNames([])).toEqual([]);
+  });
+
+  it("maps elixir objects to their names", () => {
+    expect(
+      buildElixirNames([{ name: "Felix Felicis" }, { name: "Polyjuice Potion" }]),
+    ).toEqual(["Felix Felicis", "Polyjuice Potion"]);
+  });
+
+  it("drops entries with null/empty/whitespace names", () => {
+    expect(
+      buildElixirNames([
+        { name: "Felix Felicis" },
+        { name: null },
+        { name: "   " },
+        { name: "Polyjuice Potion" },
+      ]),
+    ).toEqual(["Felix Felicis", "Polyjuice Potion"]);
   });
 });

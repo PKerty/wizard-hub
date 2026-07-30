@@ -7,7 +7,7 @@ import {
 } from "@/lib/wizards/search";
 
 function makeWizard(id: string, displayName: string | null): Wizard {
-  return { id, displayName };
+  return { id, displayName, elixirNames: [] };
 }
 
 const SAMPLE: Wizard[] = [

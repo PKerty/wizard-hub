@@ -96,7 +96,11 @@ export interface WizardSearchSubmittedProperties {
 export interface WizardResultClickedProperties {
   wizardId: string;
   wizardName: string;
-  /** 0-indexed position of the clicked result. */
+  /**
+   * 0-indexed position of the result whose details the user opened. This is the
+   * fuzzy-tuning signal (ADR-0028 feedback loop): the rank at which the user
+   * confirmed "this is the wizard I wanted" by opening its details.
+   */
   resultRank: number;
   /** Length of the query that surfaced the result, NOT the text (privacy). */
   queryLength: number;
