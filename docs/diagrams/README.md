@@ -6,7 +6,7 @@ Diagramas en Mermaid del sistema. Cumplen el entregable HLD + LLD del challenge 
 
 | Diagrama | Tipo | Qué muestra |
 |---|---|---|
-| [`hld.md`](./hld.md) | System context + componentes | Vista global: usuario → Vercel/Next.js → Wizard World API + Amplitude. |
+| [`hld.md`](./hld.md) | System context + componentes | Vista global: usuario → Vercel/Next.js → Wizard World API + Amplitude. Cubre los 3 módulos (Houses, Potions, Wizards). |
 | [`lld-house-detail.md`](./lld-house-detail.md) | Secuencia | Request `/houses/[id]` end-to-end: browser → App Router → use case → adapter → API; ISR cache; evento `House Viewed`. |
 | [`lld-potions-game.md`](./lld-potions-game.md) | Componentes + secuencia | Flujo del juego de pociones: fetching ISR → `createGameSession` → reducer → eventos → highscore. |
 | [`lld-amplitude-flow.md`](./lld-amplitude-flow.md) | Estado + secuencia | User lifecycle anónimo → conocido (ADR-0008), eventos y propiedades en cada transición. |
