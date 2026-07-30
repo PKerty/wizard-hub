@@ -55,7 +55,7 @@ export function ThemeToggle() {
       onClick={handleToggle}
       aria-label={label}
       title={label}
-      className="inline-flex size-11 items-center justify-center rounded-soft border border-moonlight/30 bg-bg-mist/60 text-torchlight backdrop-blur transition-colors duration-base ease-arcane hover:border-torchlight hover:text-steel"
+      className="inline-flex size-11 items-center justify-center rounded-soft border border-moonlight/30 bg-bg-mist/60 text-torchlight backdrop-blur transition-all duration-base ease-arcane hover:-translate-y-px hover:border-torchlight hover:text-steel"
     >
       <svg
         viewBox="0 0 24 24"

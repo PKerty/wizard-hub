@@ -88,7 +88,7 @@ export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: stri
           autoComplete="email"
           value={form.email}
           onChange={(e) => update("email", e.target.value)}
-          className="mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none transition-colors duration-base ease-arcane focus:border-torchlight"
+          className="field-arcane mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none"
         />
       </div>
 
@@ -106,7 +106,7 @@ export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: stri
           maxLength={50}
           value={form.wizardName}
           onChange={(e) => update("wizardName", e.target.value)}
-          className="mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none transition-colors duration-base ease-arcane focus:border-torchlight"
+          className="field-arcane mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none"
         />
       </div>
 
@@ -187,7 +187,7 @@ export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: stri
 
       <button
         type="submit"
-        className="mt-8 flex w-full items-center justify-center gap-2 rounded-soft bg-torchlight px-6 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:shadow-[0_0_24px_rgba(212,162,75,0.25)] hover:brightness-110"
+        className="btn-primary mt-8 flex w-full items-center justify-center gap-2 rounded-soft bg-torchlight px-6 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:shadow-[0_0_24px_rgba(212,162,75,0.25)] hover:brightness-110"
       >
         Join the Order
       </button>
