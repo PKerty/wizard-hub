@@ -8,6 +8,12 @@
 export interface Wizard {
   id: string;
   displayName: string | null;
+  /**
+   * Elixir names the wizard is associated with (display only — NOT indexed for
+   * search; ADR-0028 §3 scopes search to `displayName`). Surfaced for the
+   * "See details" panel.
+   */
+  elixirNames: string[];
 }
 
 /**
@@ -27,4 +33,17 @@ export function buildDisplayName(
   const l = lastName?.trim() || null;
   if (f && l) return `${f} ${l}`;
   return f ?? l;
+}
+
+/**
+ * Reduce raw elixirs to a list of trimmed, non-empty names (detail panel).
+ * Defensive: the API contract is `name: string` but we tolerate null/whitespace
+ * so a malformed entry never renders an empty chip. Pure + unit-tested.
+ */
+export function buildElixirNames(
+  elixirs: ReadonlyArray<{ name?: string | null }>,
+): string[] {
+  return elixirs
+    .map((e) => e?.name?.trim() || null)
+    .filter((n): n is string => n !== null && n.length > 0);
 }

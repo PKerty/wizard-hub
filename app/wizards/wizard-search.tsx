@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import type { Wizard } from "@/modules/wizards";
 import {
   DEFAULT_FUZZY_THRESHOLD,
@@ -26,6 +27,7 @@ const RESULTS_LIST_NAME = "wizards_search_results";
  */
 export function WizardSearch({ wizards }: { wizards: Wizard[] }) {
   const [query, setQuery] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
   const index = useMemo(() => createWizardIndex(wizards), [wizards]);
   const results = useMemo(() => searchWizards(index, query), [index, query]);
 
@@ -52,6 +54,18 @@ export function WizardSearch({ wizards }: { wizards: Wizard[] }) {
       resultRank: rank,
       queryLength: query.trim().length,
     });
+  }
+
+  /**
+   * Toggle a result's inline detail panel. Opening fires `Wizard Result Clicked`
+   * — the rank at which the user confirmed "this is the wizard I wanted" is the
+   * fuzzy-tuning signal (ADR-0028 feedback loop). Closing is a no-op for
+   * analytics.
+   */
+  function handleToggleDetails(wizard: Wizard, rank: number) {
+    const opening = openId !== wizard.id;
+    if (opening) handleResultClick(wizard, rank);
+    setOpenId(opening ? wizard.id : null);
   }
 
   function handleScroll() {
@@ -98,20 +112,77 @@ export function WizardSearch({ wizards }: { wizards: Wizard[] }) {
           </p>
         ) : (
           <ul className="space-y-2">
-            {results.map(({ wizard, rank }) => (
-              <li key={wizard.id}>
-                <button
-                  type="button"
-                  onClick={() => handleResultClick(wizard, rank)}
-                  className="inline-flex min-h-11 w-full items-center rounded-soft px-3 py-2 text-left font-body text-body text-steel transition-colors duration-base ease-arcane hover:bg-bg-fog/50"
-                >
-                  <span className="font-mono text-mono-data text-moonlight/60">
-                    {String(rank + 1).padStart(2, "0")}
-                  </span>
-                  <span className="ml-3">{wizard.displayName}</span>
-                </button>
-              </li>
-            ))}
+            {results.map(({ wizard, rank }) => {
+              const open = openId === wizard.id;
+              return (
+                <li key={wizard.id} className="rounded-soft">
+                  <button
+                    type="button"
+                    aria-expanded={open}
+                    onClick={() => handleToggleDetails(wizard, rank)}
+                    className="inline-flex min-h-11 w-full items-center rounded-soft px-3 py-2 text-left font-body text-body text-steel transition-colors duration-base ease-arcane hover:bg-bg-fog/50"
+                  >
+                    <span className="font-mono text-mono-data text-moonlight/60">
+                      {String(rank + 1).padStart(2, "0")}
+                    </span>
+                    <span className="ml-3 flex-1">{wizard.displayName}</span>
+                    <span className="ml-2 inline-flex items-center gap-1 font-mono text-mono-data text-moonlight/70">
+                      {open ? "Hide" : "Details"}
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={"transition-transform duration-base ease-arcane " + (open ? "rotate-180" : "")}
+                        aria-hidden="true"
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div
+                        key="details"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-3 pb-3 pt-1">
+                          {wizard.elixirNames.length > 0 ? (
+                            <>
+                              <p className="font-mono text-mono-data text-torchlight/80">
+                                Known elixirs
+                              </p>
+                              <ul className="mt-2 flex flex-wrap gap-1.5">
+                                {wizard.elixirNames.map((name) => (
+                                  <li
+                                    key={name}
+                                    className="rounded-pill border border-moonlight/20 bg-bg-fog/40 px-2.5 py-1 font-mono text-mono-data text-moonlight"
+                                  >
+                                    {name}
+                                  </li>
+                                ))}
+                              </ul>
+                            </>
+                          ) : (
+                            <p className="font-body text-small italic text-whisper">
+                              No known elixirs.
+                            </p>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

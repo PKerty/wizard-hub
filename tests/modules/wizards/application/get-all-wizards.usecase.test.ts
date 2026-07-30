@@ -11,7 +11,7 @@ function makeStubRepo(overrides: Partial<WizardsRepository> = {}): WizardsReposi
 }
 
 function makeWizard(overrides: Partial<Wizard> = {}): Wizard {
-  return { id: "w1", displayName: "Fred Weasley", ...overrides };
+  return { id: "w1", displayName: "Fred Weasley", elixirNames: [], ...overrides };
 }
 
 describe("getAllWizards use case", () => {
