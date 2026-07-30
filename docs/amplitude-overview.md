@@ -8,7 +8,7 @@ funciona en general, qué hace el proyecto hoy y qué podría hacer.
 ## 1. ¿Qué es Amplitude?
 
 Amplitude es una plataforma de **product analytics**: registra lo que hacen los
-usuari**os** dentro de la app (eventos) y te deja analizar ese flujo para entender
+usuarios dentro de la app (eventos) y te deja analizar ese flujo para entender
 comportamiento, medir conversiones y tomar decisiones de producto.
 
 La diferencia clave vs. herramientas de **web analytics** (Google Analytics,
@@ -53,7 +53,7 @@ puntual** sino en el perfil del usuario, así podés segmentar cualquier evento 
   opcionalmente un `user_id` (cuando se conoce). Cuando un anónimo se identifica,
   Amplitude **mergea** su histórico anónimo con el perfil conocido → no perdés el
   recorrido previo. Es el núcleo del lifecycle *anónimo → conocido*.
-- **Sesiones:**ventana de actividad (default ~30 min de inactividad la cierra).
+- **Sesiones:** ventana de actividad (default ~30 min de inactividad la cierra).
   El SDK las detecta solo; habilita métricas de sesiones activas, duración, etc.
 
 ### Pipeline y SDK
