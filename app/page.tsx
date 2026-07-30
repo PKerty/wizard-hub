@@ -8,7 +8,7 @@ export default function HomePage() {
         I. The Portal Opens
       </p>
 
-      <h1 className="mt-6 font-display text-mega font-semibold leading-[0.95] text-steel">
+      <h1 className="hero-shimmer mt-6 font-display text-mega font-semibold leading-[0.95]">
         Welcome, <WizardGreeting />.
       </h1>
 

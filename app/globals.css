@@ -105,6 +105,7 @@ body {
   font-family: var(--font-body);
   font-feature-settings: "ss01", "cv11";
   min-height: 100vh;
+  animation: mist-drift 48s var(--ease-arcane) infinite alternate;
 }
 
 /* Cursor affordances — make interactive elements read as clickable (design-system §4.2/4.3).
@@ -203,6 +204,43 @@ body::after {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Hero one-shot shimmer — design-system §3.1 ("Hero title del home, al cargar,
+   una vez"). Distinct from `.shimmer` (hover-triggered): sweeps once on mount. */
+.hero-shimmer {
+  background: linear-gradient(
+    115deg,
+    var(--color-steel) 30%,
+    var(--color-iri-cyan) 42%,
+    var(--color-iri-magenta) 50%,
+    var(--color-iri-violet) 58%,
+    var(--color-steel) 70%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: hero-shimmer-sweep calc(var(--duration-ritual) * 1.75) var(--ease-sigil) both;
+}
+@keyframes hero-shimmer-sweep {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Background mist drift — slow Wagnerian fog shift (design-system §1, §3.2). */
+@keyframes mist-drift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 25% 10%;
+  }
 }
 
 /* Selection */
