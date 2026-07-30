@@ -334,6 +334,56 @@ body::after {
   }
 }
 
+/* Primary button affordance — sheen sweep on hover + press scale (§4.2). */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 60%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: -1;
+}
+.btn-primary:hover::before {
+  animation: btn-sheen 700ms var(--ease-sigil);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+@keyframes btn-sheen {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* Arcane field — input focus glow + bg fill (§4.3 focus ring --sigil-violet). */
+.field-arcane {
+  transition: background-color var(--duration-base) var(--ease-arcane),
+    box-shadow var(--duration-base) var(--ease-arcane),
+    border-color var(--duration-base) var(--ease-arcane);
+}
+.field-arcane:focus {
+  border-color: var(--color-sigil-violet);
+  background-color: color-mix(in srgb, var(--color-bg-fog) 45%, transparent);
+  box-shadow: 0 0 0 1px var(--color-sigil-violet), 0 0 18px rgba(167, 139, 250, 0.18);
+}
+
 /* Selection */
 ::selection {
   background-color: var(--color-torchlight);
