@@ -93,6 +93,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0026 | Cliente HTTP compartido — `wizardWorldFetchSafe` | Aceptado |
 | 0027 | Separación de tests — `tests/` raíz espejando src | Aceptado |
 | 0028 | Búsqueda de magos con Fuse.js (search-v2-fuzzy) | Aceptado |
+| 0029 | Efecto ambiental que sigue al puntero (torchlight / cometa) | Aceptado |
 ---
 
 ## 5. Decisiones pendientes (a resolver a continuación)
