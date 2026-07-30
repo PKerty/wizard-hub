@@ -104,7 +104,7 @@ export function SparkleTrail() {
           vy: -0.15 - Math.random() * 0.4,
           life: maxLife,
           maxLife,
-          size: 0.7 + Math.random() * 1.3,
+          size: 0.9 + Math.random() * 1.4,
         });
       }
       if (!raf) raf = window.requestAnimationFrame(loop);
@@ -125,7 +125,7 @@ export function SparkleTrail() {
         s.y += s.vy * 0.96;
         const t = s.life / s.maxLife;
         const alpha = t * t * 0.65;
-        const draw = s.size * (2.5 + t * 2.5);
+        const draw = s.size * (3.2 + t * 3.2);
         ctx.globalAlpha = alpha;
         ctx.drawImage(sprite, s.x - draw / 2, s.y - draw / 2, draw, draw);
       }
