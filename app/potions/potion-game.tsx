@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef, useSyncExternalStore } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import type { Ingredient, Potion } from "@/modules/potions";
 import {
   createGameSession,
@@ -29,6 +30,28 @@ function buildNameById(potion: Potion | undefined, pool: Ingredient[]): Map<stri
   potion?.ingredientIds.forEach((id, i) => map.set(id, potion.ingredientNames[i] ?? id));
   return map;
 }
+
+// Round transition — cards stagger in (ADR-0030). The grid is keyed by roundIndex
+// inside <AnimatePresence mode="wait">, so the old round exits before the new one
+// enters; staggerChildren orchestrates the 3-card reveal.
+const ROUND_VARIANTS = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+  exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+} as const;
+
+const CARD_SLOT_VARIANTS = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 24 } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.16 } },
+} as const;
+
+const DOT_CLASS = {
+  done: "bg-success",
+  current: "bg-torchlight",
+  failed: "bg-error",
+  pending: "bg-moonlight/20",
+} as const;
 
 export function PotionGame({ potions, ingredients }: PotionGameProps) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
@@ -111,7 +134,7 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
         <button
           type="button"
           onClick={beginGame}
-          className="inline-flex items-center justify-center rounded-soft bg-torchlight px-8 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:shadow-[0_0_24px_rgba(212,162,75,0.25)] hover:brightness-110"
+          className="btn-primary inline-flex items-center justify-center rounded-soft bg-torchlight px-8 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:brightness-110"
         >
           Start brewing
         </button>
@@ -135,30 +158,35 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
         )}
       </div>
 
-      {/* Progress dots */}
+      {/* Progress dots — ignite/fill when their phase changes (keyed remount). */}
       <div className="mt-6 flex items-center gap-2">
-        {session.rounds.map((_, i) => (
-          <span
-            key={i}
-            className={
-              "h-2 w-8 rounded-pill transition-colors duration-base " +
-              (i < roundIndex
-                ? "bg-success"
-                : i === roundIndex && status === "playing"
-                  ? "bg-torchlight"
-                  : i === roundIndex && status === "lost"
-                    ? "bg-error"
-                    : "bg-moonlight/20")
-            }
-          />
-        ))}
+        {session.rounds.map((_, i) => {
+          const phase =
+            i < roundIndex
+              ? "done"
+              : i === roundIndex && status === "playing"
+                ? "current"
+                : i === roundIndex && status === "lost"
+                  ? "failed"
+                  : "pending";
+          return (
+            <motion.span
+              key={`${phase}-${i}`}
+              className={"h-2 w-8 rounded-pill " + DOT_CLASS[phase]}
+              initial={{ scaleX: 0.4, opacity: 0.5 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              style={{ originX: 0 }}
+            />
+          );
+        })}
         <span className="ml-3 font-mono text-mono-data text-moonlight">
           {status === "won" ? totalRounds : roundIndex + (status === "playing" ? 1 : 0)} / {totalRounds}
         </span>
       </div>
 
       {/* Cauldron */}
-      <div className="mt-6">
+      <div className="cauldron-surface mt-6">
         <p className="font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight">
           In the cauldron
         </p>
@@ -167,12 +195,16 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
             <span className="font-body text-small italic text-whisper">Empty — awaiting the first reagent.</span>
           ) : (
             cauldronIds.map((id, i) => (
-              <span
+              <motion.span
                 key={`${id}-${i}`}
+                layout
+                initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 420, damping: 22 }}
                 className="rounded-pill border border-success/40 bg-success/10 px-3 py-1 font-mono text-mono-data text-steel"
               >
                 {nameById.get(id) ?? id}
-              </span>
+              </motion.span>
             ))
           )}
         </div>
@@ -188,44 +220,55 @@ export function PotionGame({ potions, ingredients }: PotionGameProps) {
         </p>
       )}
 
-      {/* Cards */}
-      {round && (
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {round.cards.map((card, idx) => {
-            const tone: CardTone = reveal
-              ? card.id === round.correctId
-                ? "correct"
-                : status === "lost" && state.failedCardIndex === idx
-                  ? "wrong"
-                  : "muted"
-              : "default";
-            return (
-              <IngredientCard
-                key={card.id}
-                name={nameById.get(card.id) ?? card.name}
-                tone={tone}
-                disabled={reveal}
-                onSelect={() => {
-                  trackPotionRoundPlayed({
-                    potionId: session.potion.id,
-                    round: roundIndex + 1,
-                    cardIndex: idx as 0 | 1 | 2,
-                    correct: card.id === round.correctId,
-                  });
-                  dispatch({ type: "GUESS", ingredientId: card.id, cardIndex: idx as 0 | 1 | 2 });
-                }}
-              />
-            );
-          })}
-        </div>
-      )}
+      {/* Cards — staggered reveal per round via AnimatePresence (ADR-0030). */}
+      <AnimatePresence mode="wait">
+        {round && (
+          <motion.div
+            key={roundIndex}
+            className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3"
+            variants={ROUND_VARIANTS}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+          >
+            {round.cards.map((card, idx) => {
+              const tone: CardTone = reveal
+                ? card.id === round.correctId
+                  ? "correct"
+                  : status === "lost" && state.failedCardIndex === idx
+                    ? "wrong"
+                    : "muted"
+                : "default";
+              return (
+                <motion.div key={card.id} variants={CARD_SLOT_VARIANTS}>
+                  <IngredientCard
+                    name={nameById.get(card.id) ?? card.name}
+                    tone={tone}
+                    disabled={reveal}
+                    index={idx}
+                    onSelect={() => {
+                      trackPotionRoundPlayed({
+                        potionId: session.potion.id,
+                        round: roundIndex + 1,
+                        cardIndex: idx as 0 | 1 | 2,
+                        correct: card.id === round.correctId,
+                      });
+                      dispatch({ type: "GUESS", ingredientId: card.id, cardIndex: idx as 0 | 1 | 2 });
+                    }}
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Play again */}
       {reveal && (
         <button
           type="button"
           onClick={handleRestart}
-          className="mt-8 inline-flex items-center justify-center rounded-soft border border-moonlight bg-bg-mist/40 px-8 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-steel transition-all duration-base ease-arcane hover:border-torchlight hover:text-torchlight"
+          className="btn-primary mt-8 inline-flex items-center justify-center rounded-soft bg-torchlight px-8 py-3 font-display text-eyebrow uppercase tracking-[0.2em] text-bg-void transition-all duration-base ease-arcane hover:brightness-110"
         >
           Brew again
         </button>
