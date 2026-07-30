@@ -71,6 +71,9 @@
   --duration-base: 300ms;
   --duration-slow: 500ms;
   --duration-ritual: 800ms;
+
+  /* Glow (design-system §4.1 — sigil-violet halo, used by the Crystal Orb) */
+  --glow-sigil: 0 0 16px rgba(167, 139, 250, 0.35);
 }
 
 /* Light mode — "Ministerio diurno" */
@@ -87,6 +90,9 @@
   --color-iri-cyan: #4fa89a;
   --color-iri-magenta: #a85f87;
   --color-iri-violet: #7c66b8;
+
+  /* Light-mode glow uses the light sigil-violet (#6b4fa8). */
+  --glow-sigil: 0 0 16px rgba(107, 79, 168, 0.3);
 }
 
 /* Base */
@@ -105,6 +111,93 @@ body {
   font-family: var(--font-body);
   font-feature-settings: "ss01", "cv11";
   min-height: 100vh;
+}
+
+/* Drifting mist layer — soft moonlight-tinted fog blobs that drift via
+   transform (GPU-composited) for Wagnerian atmosphere (design-system §1/§3.2).
+   Oversized (inset -20%) so the drift reveals no edges; behind content (z -1). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(157, 183, 217, 0.1), transparent 35%),
+    radial-gradient(circle at 75% 65%, rgba(127, 217, 201, 0.07), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(184, 157, 250, 0.06), transparent 45%);
+  animation: mist-drift 50s var(--ease-arcane) infinite alternate;
+  will-change: transform;
+}
+:root[data-theme="light"] body::before {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(61, 72, 97, 0.08), transparent 35%),
+    radial-gradient(circle at 75% 65%, rgba(79, 168, 154, 0.06), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(124, 102, 184, 0.05), transparent 45%);
+}
+
+/* Cursor affordances — make interactive elements read as clickable (design-system §4.2/4.3).
+   In @layer base so explicit `cursor-*` utilities still win where needed. */
+@layer base {
+  a[href],
+  button:not(:disabled),
+  [role="button"],
+  summary,
+  label[for],
+  input[type="checkbox"],
+  input[type="radio"],
+  [data-clickable] {
+    cursor: pointer;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(
+      [type="hidden"]
+    ),
+  textarea,
+  select {
+    cursor: text;
+  }
+}
+
+/* Pointer torchlight — Excalibur "torch carried through mist" (ADR-0029 prototype).
+   Painted by body::after; position driven by --torch-x/--torch-y (set by
+   TorchlightCursor). One effect node, pointer-events:none, above page content
+   but below sticky nav (z-40) and drawers. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle 280px at var(--torch-x, 50%) var(--torch-y, 50%),
+      rgba(212, 162, 75, 0.12) 0%,
+      rgba(212, 162, 75, 0.06) 30%,
+      transparent 65%
+    ),
+    radial-gradient(
+      circle 460px at var(--torch-x, 50%) var(--torch-y, 50%),
+      rgba(127, 217, 201, 0.035) 0%,
+      rgba(217, 127, 169, 0.03) 45%,
+      transparent 70%
+    );
+}
+
+/* Light theme — the warm torchlight radial is near-invisible on parchment, so
+   it's hidden here and replaced by a gold sparkle trail (SparkleTrail canvas). */
+:root[data-theme="light"] body::after {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    display: none;
+  }
+}
+@media (pointer: coarse) {
+  body::after {
+    display: none;
+  }
 }
 
 /* Mist gradient utility (when solid bg needed, always paired with subtle gradient) */
@@ -139,6 +232,303 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Hero one-shot shimmer — design-system §3.1 ("Hero title del home, al cargar,
+   una vez"). Distinct from `.shimmer` (hover-triggered): sweeps once on mount. */
+.hero-shimmer {
+  background: linear-gradient(
+    115deg,
+    var(--color-steel) 30%,
+    var(--color-iri-cyan) 42%,
+    var(--color-iri-magenta) 50%,
+    var(--color-iri-violet) 58%,
+    var(--color-steel) 70%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: hero-shimmer-sweep 3s var(--ease-sigil) both;
+}
+@keyframes hero-shimmer-sweep {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Background mist drift — slow Wagnerian fog shift (design-system §1, §3.2). */
+@keyframes mist-drift {
+  from {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(3%, 2%, 0) scale(1.06);
+  }
+}
+
+/* House-card "armor gleam" — design-system §3.1 ("Borders of House Cards on
+   hover"). Iridescent conic border (rotating) + diagonal sheen sweep on hover.
+   Iridescence stays OFF at rest (respects §1 principle 2: iridescence as
+   firma, not décor). */
+@property --gleam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.armor-gleam::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--gleam-angle),
+    var(--color-iri-cyan),
+    var(--color-iri-magenta),
+    var(--color-iri-violet),
+    var(--color-iri-cyan)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-arcane);
+  pointer-events: none;
+  animation: gleam-rotate 4s linear infinite;
+}
+.armor-gleam:hover::before {
+  opacity: 1;
+}
+@keyframes gleam-rotate {
+  to {
+    --gleam-angle: 360deg;
+  }
+}
+.armor-gleam::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(196, 205, 217, 0.18) 50%,
+    transparent 65%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+.armor-gleam:hover::after {
+  opacity: 1;
+  animation: sheen-sweep 900ms var(--ease-sigil);
+}
+@keyframes sheen-sweep {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* Primary button affordance — sheen sweep on hover + press scale (§4.2). */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 60%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: -1;
+}
+.btn-primary:hover::before {
+  animation: btn-sheen 700ms var(--ease-sigil);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+@keyframes btn-sheen {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* Arcane field — input focus glow + bg fill (§4.3 focus ring --sigil-violet). */
+.field-arcane {
+  transition: background-color var(--duration-base) var(--ease-arcane),
+    box-shadow var(--duration-base) var(--ease-arcane),
+    border-color var(--duration-base) var(--ease-arcane);
+}
+.field-arcane:focus {
+  border-color: var(--color-sigil-violet);
+  background-color: color-mix(in srgb, var(--color-bg-fog) 45%, transparent);
+  box-shadow: 0 0 0 1px var(--color-sigil-violet), 0 0 18px rgba(167, 139, 250, 0.18);
+}
+
+/* Crystal Orb loader — signature loading affordance (design-system §4.1).
+   A glass sphere holding swirling iridescent energy: a conic gradient of the
+   three nácar stops rotates via @property so the colors *flow* inside the orb
+   rather than sitting in a fixed position. 80px mobile → 120px desktop. */
+@property --orb-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.crystal-orb {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--color-bg-void);
+  box-shadow: var(--glow-sigil), inset 0 0 28px rgba(0, 0, 0, 0.55);
+}
+@media (min-width: 768px) {
+  .crystal-orb {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+}
+/* Swirling energy core — conic gradient rotated through a registered angle
+   property (smooth interpolation), softened with a blur so it reads as nebular
+   energy rather than a color wheel. */
+.crystal-orb::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: conic-gradient(
+    from var(--orb-angle),
+    var(--color-iri-cyan),
+    var(--color-iri-violet),
+    var(--color-iri-magenta),
+    var(--color-iri-violet),
+    var(--color-iri-cyan)
+  );
+  filter: blur(7px);
+  animation: orb-swirl calc(var(--duration-ritual) * 3) linear infinite;
+}
+@keyframes orb-swirl {
+  to {
+    --orb-angle: 360deg;
+  }
+}
+/* Glass specular highlight — sells the crystal sphere volume. */
+.crystal-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 26%,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0) 40%
+  );
+  pointer-events: none;
+}
+/* Static orb under reduced motion (the global rule at the bottom of this file
+   also neutralises the animation; kept for spec clarity). */
+@media (prefers-reduced-motion: reduce) {
+  .crystal-orb::before {
+    animation: none;
+  }
+}
+
+/* Crystal Intro — first-load splash on the home page so the orb gets a proper
+   moment to be enjoyed (route loaders flash too briefly). Covers the viewport
+   above nav (z-60), holds the orb centered, then fades out. Shown once per
+   browser session; skipped entirely under prefers-reduced-motion. */
+.crystal-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-void);
+  background-image: radial-gradient(
+    ellipse at top,
+    var(--color-bg-mist) 0%,
+    var(--color-bg-void) 70%
+  );
+  pointer-events: none;
+}
+
+/* Cauldron surface — gentle bubbling sigil glow behind the reagent chips
+   (ADR-0030: continuous ambient = CSS, not Motion). */
+.cauldron-surface {
+  position: relative;
+}
+.cauldron-surface::before {
+  content: "";
+  position: absolute;
+  inset: -6px -6px -2px;
+  border-radius: var(--radius-card);
+  background: radial-gradient(
+    ellipse at 30% 120%,
+    rgba(129, 199, 132, 0.16),
+    rgba(129, 199, 132, 0) 70%
+  );
+  animation: cauldron-bubble var(--duration-ritual) var(--ease-arcane) infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes cauldron-bubble {
+  0% {
+    opacity: 0.5;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+/* Reagent card idle life — a faint torchlight breathing halo (box-shadow only,
+   transform-free so it never fights Motion's transform on the card). Phase-
+   offset per card via inline animation-delay. Iridescence is reserved for the
+   reveal bursts (design-system §1.2: max 1 simultaneous iridescent element). */
+.reagent-idle {
+  box-shadow: 0 0 0 transparent;
+  animation: reagent-breathe 3.2s var(--ease-arcane) infinite alternate;
+}
+@keyframes reagent-breathe {
+  0% {
+    box-shadow: 0 0 10px rgba(212, 162, 75, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 16px rgba(212, 162, 75, 0.16);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cauldron-surface::before,
+  .reagent-idle {
+    animation: none;
+  }
 }
 
 /* Selection */

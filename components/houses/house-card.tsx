@@ -36,7 +36,7 @@ export function HouseCard({ house, source }: HouseCardProps) {
     <Link
       href={`/houses/${house.id}?source=${sourceForUrl}`}
       onClick={handleClick}
-      className="group relative block rounded-card border border-moonlight/20 bg-bg-mist/40 p-6 transition-all duration-base ease-arcane hover:border-torchlight hover:shadow-hover"
+      className="armor-gleam group relative block rounded-card border border-moonlight/20 bg-bg-mist/40 p-6 transition-all duration-base ease-arcane hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(167,139,250,0.15),0_12px_32px_rgba(0,0,0,0.6)]"
     >
       {/* Shield placeholder — replaced by custom SVG in ADR-0015 */}
       <div

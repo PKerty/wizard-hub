@@ -4,6 +4,8 @@ import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { Providers } from "./providers";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
+import { TorchlightCursor } from "@/components/effects/torchlight-cursor";
+import { CometTrail } from "@/components/effects/comet-trail";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -27,6 +29,8 @@ export default function RootLayout({
           {THEME_INIT_SCRIPT}
         </Script>
         <Providers>
+          <TorchlightCursor />
+          <CometTrail />
           <Nav />
           {children}
           <Footer />

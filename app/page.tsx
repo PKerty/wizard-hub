@@ -1,14 +1,17 @@
 import { CtaLink } from "@/components/ui/cta-link";
 import { WizardGreeting } from "@/components/wizard-greeting";
+import { CrystalIntro } from "@/components/effects/crystal-intro";
 
 export default function HomePage() {
   return (
-    <main className="mx-auto max-w-4xl px-6 py-16 md:py-24">
+    <>
+      <CrystalIntro />
+      <main className="mx-auto max-w-4xl px-6 py-16 md:py-24">
       <p className="font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight">
         I. The Portal Opens
       </p>
 
-      <h1 className="mt-6 font-display text-mega font-semibold leading-[0.95] text-steel">
+      <h1 className="hero-shimmer mt-6 font-display text-mega font-semibold leading-[0.95]">
         Welcome, <WizardGreeting />.
       </h1>
 
@@ -23,5 +26,6 @@ export default function HomePage() {
         </CtaLink>
       </div>
     </main>
+    </>
   );
 }
