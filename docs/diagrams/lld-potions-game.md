@@ -73,7 +73,7 @@ sequenceDiagram
     S-->>UI: GameSession { rounds[] }
     UI->>R: dispatch START<br/>(session, startedAt=Date.now())
     UI->>AM: trackPotionGameStarted<br/>potionId, recipeSize
-    AM->>AM: adjunta platform (ADR-0019)
+    AM->>AMP: track (sin platform — device via Amplitude, ADR-0031)
     AM-->>AM: track → Amplitude
 
     Note over U,R: Bucle de rondas (1 acierto = avanza)

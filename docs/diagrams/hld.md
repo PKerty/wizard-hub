@@ -48,7 +48,7 @@ flowchart LR
     UI --> ANA
     WIZARD -->|"track search + resultRank"| ANA
     K -->|"form submit setUserId"| ANA
-    ANA -->|"track events + platform ADR-0019"| AMP
+    ANA -->|"track events"| AMP
     ANA -.->|"setUserId identify on fanclub join"| AMP
     UI --> USER
     USER -->|wizardName| UI
@@ -65,7 +65,7 @@ flowchart LR
 | Búsqueda de magos | Fuse.js client-side sobre 17 magos (SSG + ISR) — [ADR-0028](../adr/0028-search-v2-fuzzy.md) |
 | Analytics | Wrapper propio sobre `@amplitude/unified` — [ADR-0006](../adr/0006-amplitude-wrapper-tipado.md), [ADR-0017](../adr/0017-migracion-amplitude-unified.md), [ADR-0025](../adr/0025-potions-events-taxonomy.md) |
 | Lifecycle | Anónimo → conocido vía form — [ADR-0008](../adr/0008-user-lifecycle.md) |
-| `platform` | Event property común a todos los eventos — [ADR-0019](../adr/0019-propiedad-platform-event-property.md) |
+| `platform` | **Deprecado:** el breakdown por dispositivo lo resuelve Amplitude con sus device properties nativas (`Device Type` / `Device Category`, derivadas del UA) — [ADR-0031](../adr/0031-plataforma-device-properties-nativas-amplitude.md) (reemplaza ADR-0019) |
 
 ## Escala esperada
 

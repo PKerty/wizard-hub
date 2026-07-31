@@ -39,8 +39,7 @@ sequenceDiagram
     Note over B: Hydratación
     B->>B: mount HouseViewedTracker
     B->>AM: trackHouseViewed<br/>props: houseId, houseName,<br/>houseFounder, source=list
-    AM->>AM: computePlatform<br/>UA → web-mobile, web-tablet o web-desktop
-    AM->>AM: track House Viewed con platform adjunta
+    AM->>AM: track House Viewed
     AM-->>AM: POST event to Amplitude
 ```
 
@@ -53,7 +52,7 @@ sequenceDiagram
 | Port | `modules/houses/domain/house-repository.port.ts` | Interfaz que define el contrato. |
 | Adapter | `modules/houses/infrastructure/wizard-world-houses.repository.ts` | Llama API, mapea DTO → domain. |
 | Tracker | `app/houses/[id]/house-viewed-tracker.tsx` | Client component, dispara `House Viewed` en mount. |
-| Wrapper | `lib/analytics/client.ts` | Adjunta `platform` automáticamente a cada track. |
+| Wrapper | `lib/analytics/client.ts` | Passthrough: delega al SDK. Device/plataforma viaja via Amplitude (ADR-0031). |
 
 ## Eventos Amplitude en este flujo
 
@@ -66,7 +65,7 @@ sequenceDiagram
 ## Notas
 
 - `source` fluye como query param: `houses_list` → `list`, `home` → `home`, sin `?source=` → `direct`.
-- La prop `platform` se adjunta en el wrapper sin que el call site la pase explícitamente ([ADR-0019](../adr/0019-propiedad-platform-event-property.md)).
+- El breakdown por dispositivo lo provee Amplitude (device properties nativas — [ADR-0031](../adr/0031-plataforma-device-properties-nativas-amplitude.md)); el wrapper no adjunta `platform`.
 
 ## safeFetch — resiliencia ante API caída
 

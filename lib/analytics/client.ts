@@ -1,6 +1,5 @@
 import * as amplitude from "@amplitude/unified";
 import type { EventCatalog } from "./events";
-import { computePlatform } from "./platform";
 import { env } from "@/lib/config/env";
 
 let initialized = false;
@@ -63,14 +62,10 @@ export function sendEvent<N extends keyof EventCatalog>(
 ): void {
   if (!initialized) return;
 
-  // ADR-0019: attach `platform` to every tracked event (anonymous-safe —
-  // travels with the event, no dependency on identify() ordering).
-  // Omit when SSR returned null rather than sending `platform: null`.
-  const platform = computePlatform();
-  const payload = { ...(properties as unknown as Record<string, unknown>) };
-  if (platform !== null) payload.platform = platform;
-
-  amplitude.track(name, payload);
+  // Device/platform breakdown is left to Amplitude's auto device properties
+  // (Device Type / Device Category, derived server-side from the UA) — see
+  // ADR-0031 (supersedes ADR-0019). KISS: don't reinvent UA classification.
+  amplitude.track(name, properties);
 }
 
 /**
