@@ -56,12 +56,13 @@ sequenceDiagram
     participant R as gameReducer
     participant ST as storage<br/>localStorage
     participant AM as Amplitude wrapper
+    participant AMP as Amplitude
 
     Note over U,N: Carga inicial /potions (ISR)
     U->>B: GET /potions
     B->>N: render
     N->>UC: getPlayablePotions + getAllIngredients<br/>(Promise.all)
-    UC->>A: GET /Elixirs ; GET /Ingredients
+    UC->>A: GET /Elixirs + GET /Ingredients
     A-->>UC: JSON
     UC-->>N: Potion[] · Ingredient[]
     N-->>B: HTML prerendered (revalidate 86400s)
@@ -74,7 +75,6 @@ sequenceDiagram
     UI->>R: dispatch START<br/>(session, startedAt=Date.now())
     UI->>AM: trackPotionGameStarted<br/>potionId, recipeSize
     AM->>AMP: track (sin platform — device via Amplitude, ADR-0031)
-    AM-->>AM: track → Amplitude
 
     Note over U,R: Bucle de rondas (1 acierto = avanza)
     loop cada ronda hasta la última
