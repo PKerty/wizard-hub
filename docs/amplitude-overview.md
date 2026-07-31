@@ -97,9 +97,10 @@ Capacidades de Amplitude (las que apply a un proyecto web como este):
   incorrectas. Cambiar de vendor → tocar 1 archivo.
 - **Autocapture selectivo:** solo `pageViews` + `sessions`. El resto manual
   (catálogo finito y deliberado, no captura indiscriminada de clicks/forms).
-- **`platform` automática en TODOS los eventos** (`web-desktop | web-mobile |
-  web-tablet`) inyectada por el wrapper (ADR-0019). En SSR se omite en vez de
-  mandar `null`. Esto habilita la métrica "by Platform" sin esfuerzo por evento.
+- **Device/plataforma:** el breakdown por dispositivo (desktop/mobile/tablet) lo
+  dan las **device properties nativas de Amplitude** (`Device Type` /
+  `[Amplitude] Device Category`, derivadas del UA server-side) en cada evento.
+  No mandamos `platform` custom — ADR-0031 (reemplaza ADR-0019, KISS). Esto habilita la métrica "by Platform" sin esfuerzo por evento.
 - **Kill-switch por env:** `NEXT_PUBLIC_AMPLITUDE_ENABLED=false` desactiva todo
   (local, tests, CI sin API key).
 - **Session Replay opt-in** vía `NEXT_PUBLIC_AMPLITUDE_SESSION_REPLAY=true`
@@ -207,8 +208,8 @@ Ordenado de "casi gratis, ya tenemos los datos" a "requiere plan/trabajo nuevo".
 
 ## Referencias
 - ADRs: 0006 (wrapper), 0007 (taxonomy), 0008 (lifecycle), 0017 (unified),
-  0019 (`platform`), 0018 (`Fanclub Joined`), 0025 (potions events), 0028
-  (wizard search).
-- Código: `lib/analytics/` (`client.ts`, `events.ts`, `index.ts`, `platform.ts`).
+  0018 (`Fanclub Joined`), 0025 (potions events), 0028
+  (wizard search), 0031 (device props nativas, reemplaza 0019).
+- Código: `lib/analytics/` (`client.ts`, `events.ts`, `index.ts`).
 - Docs Amplitude: https://amplitude.com/docs/analytics/browser-sdk y
   https://amplitude.com/docs/framework-integrations/nextjs-installation

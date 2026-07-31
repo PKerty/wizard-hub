@@ -83,7 +83,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0016 | Ilustración — line-art tipo "Marauder's Map" | Aceptado |
 | 0017 | Migración a `@amplitude/unified` (reemplaza parte de ADR-0006) | Aceptado |
 | 0018 | Extender taxonomy con `Fanclub Joined` (extiende ADR-0007 a v1.1) | Aceptado |
-| 0019 | Implementación de `platform` — event property en wrapper (precisa ADR-0007) | Aceptado |
+| 0019 | Implementación de `platform` — event property en wrapper (precisa ADR-0007) | Reemplazado por ADR-0031 |
 | 0020 | Estrategia responsive — mobile-first con Tailwind defaults | Aceptado |
 | 0021 | Nav hamburguesa en mobile (reemplaza parte de ADR-0020 §2) | Aceptado |
 | 0022 | Nuevo módulo `potions` (bounded context hexagonal) | Aceptado |
@@ -95,6 +95,7 @@ Mecanismo oficial para registrar decisiones. Reglas completas en `docs/adr/0001-
 | 0028 | Búsqueda de magos con Fuse.js (search-v2-fuzzy) | Aceptado |
 | 0029 | Efecto ambiental que sigue al puntero (torchlight / cometa) | Aceptado |
 | 0030 | Librería de animación — Motion (ex-Framer Motion) | Aceptado |
+| 0031 | Plataforma/dispositivo — device properties nativas de Amplitude (reemplaza ADR-0019) | Aceptado |
 ---
 
 ## 5. Decisiones pendientes (a resolver a continuación)

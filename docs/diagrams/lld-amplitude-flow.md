@@ -37,7 +37,7 @@ sequenceDiagram
     W->>AM: setUserId email
     W->>AM: identify<br/>props: lifecycleStage=known,<br/>wizardName, favoriteHouse
     F->>W: trackFanclubJoined<br/>props: favoriteHouse, wizardNameLength
-    W->>W: adjunta platform ADR-0019
+    W->>W: track (device breakdown via Amplitude — ADR-0031)
     W->>AM: track Fanclub Joined<br/>con platform adjunta
     F->>L: saveWizardName wizardName
     F->>U: router.push /
@@ -80,7 +80,7 @@ sequenceDiagram
 | `Potion Game Lost` | Ronda fallada | `potionId`, `potionName`, `round`, `failedCardIndex` |
 | `Potion Game Restarted` | Click "Brew again" tras fin | `previousPotionId`, `previousOutcome` |
 
-**`platform`** (`web-desktop` \| `web-mobile` \| `web-tablet`) está adjunta automáticamente a **todos** los eventos vía wrapper — ver [ADR-0019](../adr/0019-propiedad-platform-event-property.md).
+**Dispositivo/plataforma:** el breakdown lo resuelve Amplitude con sus device properties nativas (`Device Type` / `Device Category`) — ver [ADR-0031](../adr/0031-plataforma-device-properties-nativas-amplitude.md) (reemplaza ADR-0019).
 
 ## Métricas del challenge soportadas
 

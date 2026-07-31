@@ -1,6 +1,6 @@
 # ADR-0019: Implementación de `platform` — event property en wrapper (precisa ADR-0007)
 
-- **Estado:** Aceptado
+- **Estado:** Reemplazado por [ADR-0031](./0031-plataforma-device-properties-nativas-amplitude.md)
 - **Fecha:** 2026-07-28
 - **Decisor(es):** kerty + arquitecto
 - **Precisa:** [ADR-0007](./0007-event-taxonomy.md) §"Métrica 2 — All Houses Viewed by Platform"
