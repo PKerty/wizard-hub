@@ -544,6 +544,36 @@ body::after {
   border-radius: var(--radius-soft);
 }
 
+/* Mobile nav drawer — Radix Dialog data-state animations */
+.mobile-nav-overlay[data-state="open"] {
+  animation: mobile-nav-fade-in var(--duration-base) var(--ease-arcane);
+}
+.mobile-nav-overlay[data-state="closed"] {
+  animation: mobile-nav-fade-out var(--duration-base) var(--ease-arcane);
+}
+.mobile-nav-content[data-state="open"] {
+  animation: mobile-nav-slide-in var(--duration-base) var(--ease-arcane);
+}
+.mobile-nav-content[data-state="closed"] {
+  animation: mobile-nav-slide-out var(--duration-base) var(--ease-arcane);
+}
+@keyframes mobile-nav-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mobile-nav-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes mobile-nav-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes mobile-nav-slide-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
 /* Reduced motion — always respected (design-system §6) */
 @media (prefers-reduced-motion: reduce) {
   *,

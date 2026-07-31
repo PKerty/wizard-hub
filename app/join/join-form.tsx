@@ -50,9 +50,13 @@ export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: stri
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!form.email || !form.wizardName || !form.favoriteHouse) return;
+    if (!EMAIL_RE.test(form.email)) return;
+    if (!form.wizardName.trim()) return;
+    if (!form.favoriteHouse) return;
 
     const normalizedEmail = form.email.trim().toLowerCase();
     const wizardName = form.wizardName.trim();
@@ -86,9 +90,10 @@ export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: stri
           type="email"
           required
           autoComplete="email"
+          placeholder="hermione@hogwarts.edu"
           value={form.email}
           onChange={(e) => update("email", e.target.value)}
-          className="field-arcane mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none"
+          className="field-arcane mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none placeholder:text-whisper/60"
         />
       </div>
 
@@ -104,9 +109,10 @@ export function JoinForm({ initialFavoriteHouse }: { initialFavoriteHouse?: stri
           type="text"
           required
           maxLength={50}
+          placeholder="The Half-Blood Prince"
           value={form.wizardName}
           onChange={(e) => update("wizardName", e.target.value)}
-          className="field-arcane mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none"
+          className="field-arcane mt-2 w-full border-b border-moonlight/40 bg-transparent py-2 font-body text-body text-steel outline-none placeholder:text-whisper/60"
         />
       </div>
 

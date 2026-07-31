@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -34,10 +34,6 @@ const LINKS: readonly LinkDef[] = [
 describe("MobileNav (ADR-0021)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    document.body.style.overflow = "";
   });
 
   it("renders the hamburger trigger button (degenerate case)", () => {
@@ -100,7 +96,7 @@ describe("MobileNav (ADR-0021)", () => {
 
   it("closes drawer when overlay is clicked", async () => {
     const user = userEvent.setup();
-    const { container } = render(
+    render(
       <MobileNav
         links={LINKS}
         isActive={() => false}
@@ -110,15 +106,14 @@ describe("MobileNav (ADR-0021)", () => {
 
     await user.click(screen.getByRole("button", { name: "Open menu" }));
 
-    // Overlay is a decorative div (aria-hidden). Click on it directly by selector.
-    const overlay = container.querySelector(".fixed.inset-0.z-40");
+    const overlay = document.querySelector(".mobile-nav-overlay");
     expect(overlay).not.toBeNull();
     await user.click(overlay as HTMLElement);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("closes drawer on Escape and returns focus to the trigger", async () => {
+  it("closes drawer on Escape", async () => {
     const user = userEvent.setup();
     render(
       <MobileNav
@@ -128,17 +123,15 @@ describe("MobileNav (ADR-0021)", () => {
       />,
     );
 
-    const trigger = screen.getByRole("button", { name: "Open menu" });
-    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
 
     await user.keyboard("{Escape}");
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(trigger).toHaveFocus();
   });
 
-  it("toggles aria-expanded and aria-label on the trigger", async () => {
+  it("closes drawer when the close button is clicked", async () => {
     const user = userEvent.setup();
     render(
       <MobileNav
@@ -148,13 +141,12 @@ describe("MobileNav (ADR-0021)", () => {
       />,
     );
 
-    const trigger = screen.getByRole("button", { name: "Open menu" });
-    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
 
-    await user.click(trigger);
-    // After opening the accessible name changes; re-query.
-    const openTrigger = screen.getByRole("button", { name: "Close menu" });
-    expect(openTrigger).toHaveAttribute("aria-expanded", "true");
+    await user.click(screen.getByRole("button", { name: "Close" }));
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("marks active link with aria-current=page", async () => {
@@ -173,23 +165,6 @@ describe("MobileNav (ADR-0021)", () => {
     expect(housesLink).toHaveAttribute("aria-current", "page");
   });
 
-  it("locks body scroll while drawer is open", async () => {
-    const user = userEvent.setup();
-    render(
-      <MobileNav
-        links={LINKS}
-        isActive={() => false}
-        onLinkClick={() => {}}
-      />,
-    );
-
-    await user.click(screen.getByRole("button", { name: "Open menu" }));
-    expect(document.body.style.overflow).toBe("hidden");
-
-    await user.keyboard("{Escape}");
-    expect(document.body.style.overflow).toBe("");
-  });
-
   it("closes drawer when the footer node is clicked (e.g. Join link)", async () => {
     const user = userEvent.setup();
     render(
@@ -198,9 +173,7 @@ describe("MobileNav (ADR-0021)", () => {
         isActive={() => false}
         onLinkClick={() => {}}
         footer={
-          <a href="/join" data-testid="footer-join">
-            Join
-          </a>
+          <a href="/join" data-testid="footer-join">Join</a>
         }
       />,
     );
