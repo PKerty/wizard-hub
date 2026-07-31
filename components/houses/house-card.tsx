@@ -4,6 +4,13 @@ import Link from "next/link";
 import { trackHouseCardClicked } from "@/lib/analytics";
 import type { House } from "@/modules/houses";
 
+const HOUSE_ACCENT_COLORS: Record<string, string> = {
+  gryffindor: "var(--color-house-gryffindor)",
+  slytherin: "var(--color-house-slytherin)",
+  ravenclaw: "var(--color-house-ravenclaw)",
+  hufflepuff: "var(--color-house-hufflepuff)",
+};
+
 export interface HouseCardProps {
   house: House;
   /**
@@ -31,6 +38,7 @@ export function HouseCard({ house, source }: HouseCardProps) {
 
   const sourceForUrl = source === "houses_list" ? "list" : source;
   const primaryTrait = house.traitNames[0] ?? "";
+  const accentColor = HOUSE_ACCENT_COLORS[house.name.toLowerCase()] ?? "var(--color-torchlight)";
 
   return (
     <Link
@@ -38,9 +46,14 @@ export function HouseCard({ house, source }: HouseCardProps) {
       onClick={handleClick}
       className="armor-gleam group relative block rounded-card border border-moonlight/20 bg-bg-mist/40 p-6 transition-all duration-base ease-arcane hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(167,139,250,0.15),0_12px_32px_rgba(0,0,0,0.6)]"
     >
-      {/* Shield placeholder — replaced by custom SVG in ADR-0015 */}
+      {/* Shield — accented with the house's primary color */}
       <div
-        className="mb-4 flex size-12 items-center justify-center rounded-soft border border-moonlight/30 text-torchlight"
+        className="mb-4 flex size-12 items-center justify-center rounded-soft border"
+        style={{
+          color: accentColor,
+          borderColor: `color-mix(in srgb, ${accentColor} 50%, transparent)`,
+          backgroundColor: `color-mix(in srgb, ${accentColor} 12%, transparent)`,
+        }}
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth={1.5}>
@@ -63,7 +76,7 @@ export function HouseCard({ house, source }: HouseCardProps) {
         </p>
       )}
 
-      <p className="mt-4 font-display text-eyebrow uppercase tracking-[0.2em] text-torchlight opacity-70 transition-opacity duration-base group-hover:opacity-100">
+      <p className="mt-4 font-display text-eyebrow uppercase tracking-[0.2em] opacity-70 transition-opacity duration-base group-hover:opacity-100" style={{ color: accentColor }}>
         → Enter
       </p>
     </Link>

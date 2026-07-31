@@ -23,7 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" data-theme="dark" suppressHydrationWarning>
-      <body className="font-body antialiased">
+      <body className="font-body antialiased flex min-h-dvh flex-col">
         {/* Sets initial data-theme before hydration to prevent FOUC (ADR-0013 §6). */}
         <Script id="theme-init" strategy="beforeInteractive">
           {THEME_INIT_SCRIPT}
@@ -32,7 +32,7 @@ export default function RootLayout({
           <TorchlightCursor />
           <CometTrail />
           <Nav />
-          {children}
+          <main className="flex-1">{children}</main>
           <Footer />
         </Providers>
       </body>
