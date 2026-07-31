@@ -49,3 +49,6 @@ docs/_build
 
 # challenge brief — private, not for repo
 docs/Challenge*.pdf
+
+docs/presentacion.md
+presentacion/
